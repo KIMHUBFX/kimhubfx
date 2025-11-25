@@ -1,43 +1,50 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
   <meta charset="utf-8" />
-  <title>Redirecting...</title>
   <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Redirecting...</title>
+  <link rel="stylesheet" href="/kimhubfx/style.css" />
 </head>
 <body>
-  <p>Completing login…</p>
-<script>
-  // Deriv may return token in fragment (#token=...) or query (?token=...)
-  (function() {
-    function getFromHash() {
-      const h = window.location.hash || '';
-      if (!h) return null;
-      const frag = h.startsWith('#') ? h.slice(1) : h;
-      const parts = frag.split('&');
-      for (const p of parts) {
-        const [k,v] = p.split('=');
-        if (!k || !v) continue;
-        if (k === 'token' || k === 'access_token') return decodeURIComponent(v);
-      }
-      return null;
-    }
-    function getFromQuery() {
-      const q = new URLSearchParams(window.location.search);
-      return q.get('token') || q.get('access_token') || null;
-    }
+  <main class="center">
+    <h3>Completing login…</h3>
+    <p>Please wait — redirecting to dashboard.</p>
+  </main>
 
-    const token = getFromHash() || getFromQuery();
-    if (token) {
-      localStorage.setItem('auth_token', token);
-      // remove fragment/query from URL
-      window.history.replaceState({}, document.title, '/KIMHUBFX/dashboard.html');
-      // redirect to dashboard
-      window.location.href = 'dashboard.html';
-    } else {
-      document.body.innerHTML = '<h2>No token received — please login again</h2><p><a href="login.html">Back to Login</a></p>';
+<script>
+(function() {
+  // support token in fragment (#token=...) or query (?token=...)
+  function tokenFromHash() {
+    const h = window.location.hash || '';
+    if (!h) return null;
+    const frag = h.startsWith('#') ? h.slice(1) : h;
+    const parts = frag.split('&');
+    for (const p of parts) {
+      const [k,v] = p.split('=');
+      if (!k || !v) continue;
+      if (k === 'token' || k === 'access_token') return decodeURIComponent(v);
     }
-  })();
+    return null;
+  }
+  function tokenFromQuery() {
+    const q = new URLSearchParams(window.location.search);
+    return q.get('token') || q.get('access_token') || null;
+  }
+
+  const token = tokenFromHash() || tokenFromQuery();
+  if (!token) {
+    // no token — go back to login
+    window.location.href = '/kimhubfx/login.html';
+    return;
+  }
+
+  // store token and redirect to dashboard (clean URL)
+  localStorage.setItem('auth_token', token);
+  // remove fragment/query from history and go to dashboard
+  window.history.replaceState({}, document.title, '/kimhubfx/dashboard.html');
+  window.location.href = '/kimhubfx/dashboard.html';
+})();
 </script>
 </body>
 </html>
