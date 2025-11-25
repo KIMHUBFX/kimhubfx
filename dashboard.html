@@ -1,54 +1,32 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>KIMHUBFX • Dashboard</title>
-  <link rel="stylesheet" href="style.css" />
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard - KIMHUBFX</title>
+    <link rel="stylesheet" href="style.css">
 </head>
 <body>
-  <header class="topbar">
-    <div class="brand">KIMHUBFX</div>
-    <nav>
-      <a class="navlink" href="index.html">Home</a>
-      <a class="navlink" href="login.html">Login</a>
-      <button class="btn small" id="logoutBtn">Logout</button>
-    </nav>
-  </header>
 
-  <main class="center">
-    <section class="card wide">
-      <div class="row">
-        <div>
-          <h3>Account Balance</h3>
-          <div id="balanceBox" class="big">—</div>
-        </div>
+<div class="container">
 
-        <div>
-          <h3>Connection</h3>
-          <div id="status" class="status waiting">Waiting for connection...</div>
-        </div>
-      </div>
-    </section>
+    <h2>KIMHUBFX LIVE BOT</h2>
+    
+    <div class="box">
+        <p><b>Balance:</b> <span id="balance">Loading...</span></p>
+        <p><b>Last Tick:</b> <span id="tick">----</span></p>
+        <p><b>Last Digit:</b> <span id="digit" class="digit">-</span></p>
+    </div>
 
-    <section class="card">
-      <h3>R_100 Live Price</h3>
-      <div id="tickBox" class="tick">—</div>
-      <div id="tickTime" class="muted">—</div>
-    </section>
+    <button id="startBtn" class="btn">Start Bot</button>
+    <button id="stopBtn" class="btn stop">Stop Bot</button>
 
-    <section class="card">
-      <h3>History (events)</h3>
-      <div id="history" class="history">No events yet</div>
-    </section>
-  </main>
+    <h3>Trade History</h3>
+    <div id="history" class="history"></div>
 
-  <script src="app.js"></script>
-  <script>
-    // attach logout button
-    document.getElementById('logoutBtn').addEventListener('click', () => {
-      logout();
-    });
-  </script>
+</div>
+
+<script src="app.js"></script>
+
 </body>
 </html>
