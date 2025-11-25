@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>KIMHUBFX • Official Platform</title>
+    <link rel="stylesheet" href="style.css">
+    <style>
+        body {
+            background: linear-gradient(135deg, #0f0f0f, #1b1b1b);
+            color: #fff;
+            font-family: Arial, sans-serif;
+            text-align: center;
+            padding: 0;
+            margin: 0;
+        }
+
+        .landing-container {
+            padding: 60px 20px;
+        }
+
+        .logo {
+            font-size: 38px;
+            font-weight: bold;
+            color: #ff0055;
+            margin-bottom: 15px;
+            text-shadow: 0 0 10px #ff0055;
+        }
+
+        .subtitle {
+            font-size: 18px;
+            color: #ccc;
+            margin-bottom: 40px;
+        }
+
+        .btn-landing {
+            display: block;
+            width: 80%;
+            margin: 10px auto;
+            padding: 14px;
+            background: #ff0055;
+            color: #fff;
+            font-size: 18px;
+            border-radius: 8px;
+            text-decoration: none;
+            transition: 0.2s;
+        }
+
+        .btn-landing:hover {
+            transform: scale(1.05);
+        }
+
+        .footer {
+            margin-top: 60px;
+            font-size: 13px;
+            color: #777;
+        }
+    </style>
+</head>
+<body>
+
+<div class="landing-container">
+    <div class="logo">KIMHUBFX</div>
+    <div class="subtitle">
+        Your trusted platform for Deriv dashboard monitoring and account access.
+    </div>
+
+    <a class="btn-landing" href="login.html">Login to Dashboard</a>
+
+    <a class="btn-landing" 
+       href="https://deriv.partners/rx?ca=kimhuhfx.com&utm_campaign=dynamicworks&utm_medium=affiliate&utm_source=CU154142"
+       target="_blank">
+       Create Deriv Account
+    </a>
+
+    <div class="footer">© 2025 KIMHUBFX — All Rights Reserved</div>
+</div>
+
+</body>
+</html>
