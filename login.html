@@ -1,42 +1,28 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Login | KIMHUBFX</title>
-  <link rel="stylesheet" href="style.css">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login | KIMHUBFX</title>
+    <link rel="stylesheet" href="style.css">
 </head>
 
 <body>
+<div class="container">
+    <h2>Login to Deriv</h2>
+    <button id="loginBtn" class="btn">Login</button>
+</div>
 
-  <div class="container">
-      <h2>Login to Deriv</h2>
+<script>
+    const app_id = 112604;
+    const redirect = "https://kimhubfx.github.io/KIMHUBFX/redirect.html";
 
-      <button id="loginBtn" style="padding: 12px 25px; font-size: 18px; cursor: pointer;">
-        Login
-      </button>
-  </div>
-
-  <script>
-    document.addEventListener("DOMContentLoaded", () => {
-
-      const loginBtn = document.getElementById("loginBtn");
-
-      loginBtn.addEventListener("click", () => {
-
-        const app_id = 112604;
-
-        const redirect = "https://kimhubfx.github.io/KIMHUBFX/redirect.html";
-
-        const url = `https://oauth.deriv.com/oauth2/authorize?app_id=${app_id}&l=EN&redirect_uri=${redirect}`;
-
-        console.log("Redirecting to:", url);  // debugging
-
+    document.getElementById("loginBtn").addEventListener("click", () => {
+        const url =
+            `https://oauth.deriv.com/oauth2/authorize?app_id=${app_id}&redirect_uri=${redirect}`;
         window.location.href = url;
-      });
-
     });
-  </script>
+</script>
 
 </body>
 </html>
