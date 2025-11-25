@@ -1,41 +1,4 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>KIMHUBFX • Login</title>
-  <link rel="stylesheet" href="/kimhubfx/style.css" />
-</head>
-<body>
-  <nav class="top-nav small">
-    <a class="nav-left brand" href="/kimhubfx/index.html">KIMHUBFX</a>
-    <div class="nav-right">
-      <a class="nav-btn" href="/kimhubfx/wallet.html">Deposit / Withdraw</a>
-      <a class="nav-btn red" href="/kimhubfx/login.html">Log in</a>
-      <a class="nav-btn" href="https://deriv.com/signup/?partner_id=kimhubfx.com" target="_blank" rel="noopener">Sign up</a>
-    </div>
-  </nav>
-
-  <main class="center small">
-    <h2>Login to KIMHUBFX</h2>
-    <p>Use Deriv's secure OAuth. After approving you'll be redirected to the dashboard.</p>
-
-    <div class="actions stacked">
-      <button id="loginBtn" class="btn">Login</button>
-      <a class="btn ghost" href="/kimhubfx/index.html">Back to Home</a>
-    </div>
-
-    <div class="note">If you prefer to create an account, click Sign up.</div>
-  </main>
-
-  <script>
-    document.getElementById('loginBtn').addEventListener('click', () => {
-      const app_id = 112604;
-      const redirect = "https://kimhubfx.github.io/kimhubfx/redirect.html";
-      // include response_type=token and language param
-      const oauth_url = `https://oauth.deriv.com/oauth2/authorize?app_id=${app_id}&l=EN&response_type=token&redirect_uri=${encodeURIComponent(redirect)}`;
-      window.location.href = oauth_url;
-    });
-  </script>
-</body>
-</html>
+<a class="btn primary"
+   href="https://oauth.deriv.com/oauth2/authorize?app_id=112604&redirect_uri=https://kimhubfx.github.io/kimhubfx/redirect.html">
+   Login with Deriv
+</a>
