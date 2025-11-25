@@ -1,35 +1,66 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>KIMHUBFX • Home</title>
-  <link rel="stylesheet" href="/kimhubfx/style.css" />
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>KIMHUBFX – Welcome</title>
+    <link rel="stylesheet" href="style.css" />
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background: #0f1d4a;
+            color: white;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+            text-align: center;
+        }
+        .box {
+            background: #13235c;
+            padding: 40px;
+            border-radius: 10px;
+            width: 90%;
+            max-width: 350px;
+        }
+        .btn {
+            display: block;
+            width: 100%;
+            padding: 15px;
+            margin-top: 10px;
+            border-radius: 8px;
+            text-decoration: none;
+            font-weight: bold;
+        }
+        .primary {
+            background: #0098ff;
+            color: white;
+        }
+        .secondary {
+            background: #00c853;
+            color: white;
+        }
+    </style>
 </head>
 <body>
-  <nav class="top-nav">
-    <a class="nav-left brand" href="/kimhubfx/index.html">KIMHUBFX</a>
 
-    <div class="nav-right">
-      <a class="nav-btn inactive" id="dp-tool">DP Tool</a>
-      <a class="nav-btn" href="/kimhubfx/strategies.html">Strategies</a>
-      <a class="nav-btn" href="https://www.tradingview.com/chart/" target="_blank" rel="noopener">Analysis</a>
-      <a class="nav-btn" href="/kimhubfx/freebots.html">Free Bots</a>
+<div class="box">
+    <h2>Welcome to KIMHUBFX</h2>
+    <p>Select an option to continue:</p>
 
-      <a class="nav-btn" href="/kimhubfx/wallet.html">Deposit / Withdraw</a>
-      <a class="nav-btn red" href="/kimhubfx/login.html">Log in</a>
-      <a class="nav-btn" href="https://deriv.com/signup/?partner_id=kimhubfx.com" target="_blank" rel="noopener">Sign up</a>
-    </div>
-  </nav>
+    <!-- LOGIN BUTTON -->
+    <a class="btn primary"
+       href="https://oauth.deriv.com/oauth2/authorize?app_id=112604&redirect_uri=https://kimhubfx.github.io/kimhubfx/redirect.html">
+       Login
+    </a>
 
-  <main class="center">
-    <h1>Welcome to KIMHUBFX</h1>
-    <p class="lead">Monitor your Deriv account, explore strategies and import free bots later.</p>
+    <!-- CREATE ACCOUNT BUTTON -->
+    <a class="btn secondary"
+       href="https://deriv.com/signup/?ref=kimhubfx&tag=affiliate">
+       Create Account
+    </a>
+</div>
 
-    <div class="actions">
-      <a class="btn" href="/kimhubfx/login.html">Login</a>
-      <a class="btn ghost" href="/kimhubfx/freebots.html">Free Bots</a>
-    </div>
-  </main>
 </body>
 </html>
