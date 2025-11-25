@@ -1,4 +1,7 @@
-<a class="btn primary"
-   href="https://oauth.deriv.com/oauth2/authorize?app_id=112604&redirect_uri=https://kimhubfx.github.io/kimhubfx/redirect.html">
-   Login with Deriv
-</a>
+<script>
+    function login() {
+        const app_id = 112604;
+        const redirect_url = "https://kimhubfx.github.io/kimhubfx/redirect.html";
+        window.location.href = `https://oauth.deriv.com/oauth2/authorize?app_id=${app_id}&redirect_uri=${redirect_url}`;
+    }
+</script>
