@@ -2,14 +2,14 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta-name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>KIMHUBFX – Welcome</title>
-    <link rel="stylesheet" href="style.css" />
+
     <style>
         body {
             font-family: Arial, sans-serif;
-            background: #0e0e0e;
-            color: white;
+            background: #0e0f1a; /* Deriv dark background */
+            color: #ffffff;
             display: flex;
             justify-content: center;
             align-items: center;
@@ -18,42 +18,34 @@
             text-align: center;
         }
         .box {
-            background: #151515;
+            background: #131426; /* Deriv panel color */
             padding: 40px;
-            border-radius: 12px;
+            border-radius: 10px;
             width: 90%;
-            max-width: 360px;
-            box-shadow: 0 0 20px rgba(255, 68, 79, 0.3);
-            border-top: 4px solid #ff444f;
+            max-width: 350px;
+            border: 1px solid #2a2c4a;
         }
         h2 {
+            color: #ff444f;  /* Deriv red */
             margin-bottom: 10px;
-            font-weight: bold;
         }
         .btn {
             display: block;
             width: 100%;
             padding: 15px;
-            margin-top: 15px;
+            margin-top: 12px;
             border-radius: 8px;
             text-decoration: none;
             font-weight: bold;
             font-size: 16px;
         }
         .primary {
-            background: #ff444f;
-            color: #ffffff;
-        }
-        .primary:hover {
-            background: #e0333f;
+            background: #ff444f; /* Deriv red */
+            color: white;
         }
         .secondary {
-            background: #2e2e2e;
-            color: #ffffff;
-            border: 1px solid #ff444f;
-        }
-        .secondary:hover {
-            background: #3b3b3b;
+            background: #85acb0; /* Deriv soft cyan-grey */
+            color: #0e0f1a;
         }
     </style>
 </head>
@@ -61,7 +53,7 @@
 
 <div class="box">
     <h2>KIMHUBFX</h2>
-    <p>Choose an option to continue:</p>
+    <p style="color:#dcdcdc;">Choose an option to continue</p>
 
     <!-- LOGIN BUTTON -->
     <a class="btn primary"
