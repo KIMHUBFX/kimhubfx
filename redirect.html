@@ -1,33 +1,11 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Redirecting...</title>
-</head>
-<body style="background:#0E0E2C; color:white; font-family:Arial;">
-
-<h2 style="text-align:center; margin-top:50px;">Redirecting...</h2>
-
 <script>
-    // Get the token from Deriv OAuth redirect
     const urlParams = new URLSearchParams(window.location.search);
     const token = urlParams.get("token");
 
     if (token) {
-        // Save token to localStorage
         localStorage.setItem("authToken", token);
-
-        // Redirect to dashboard
         window.location.href = "dashboard.html";
     } else {
-        // No token found
-        document.body.innerHTML += "<p style='text-align:center;color:red;'>No token found. Please login again.</p>";
-        setTimeout(() => {
-            window.location.href = "login.html";
-        }, 2000);
+        document.body.innerHTML = "<h2>No token found</h2>";
     }
 </script>
-
-</body>
-</html>
