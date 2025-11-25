@@ -7,22 +7,30 @@
   <link rel="stylesheet" href="style.css" />
 </head>
 <body>
-  <header class="topbar">
-    <div class="brand">KIMHUBFX</div>
-  </header>
+  <!-- Top navigation -->
+  <nav class="top-nav">
+    <a class="nav-left brand" href="index.html">KIMHUBFX</a>
+
+    <div class="nav-right">
+      <a class="nav-btn inactive" id="dp-tool">DP Tool</a>
+      <a class="nav-btn" href="strategies.html">Strategies</a>
+      <a class="nav-btn" href="https://www.tradingview.com/chart/" target="_blank" rel="noopener">Analysis</a>
+      <a class="nav-btn" href="freebots.html">Free Bots</a>
+
+      <a class="nav-btn" href="wallet.html">Deposit / Withdraw</a>
+      <a class="nav-btn red" href="login.html">Log in</a>
+      <a class="nav-btn" href="https://deriv.com/signup/?partner_id=kimhuhfx.com" target="_blank" rel="noopener">Sign up</a>
+    </div>
+  </nav>
 
   <main class="center">
     <h1>Welcome to KIMHUBFX</h1>
-    <p class="lead">Monitor your Deriv account and live R_100 prices — secure via Deriv OAuth.</p>
+    <p class="lead">Monitor Deriv accounts, explore strategies and import free bots later.</p>
 
     <div class="actions">
       <a class="btn" href="login.html">Login</a>
-      <a class="btn ghost" href="https://deriv.partners/rx?ca=kimhuhfx.com&utm_campaign=dynamicworks&utm_medium=affiliate&utm_source=CU154142" target="_blank" rel="noopener">Create Deriv Account</a>
+      <a class="btn ghost" href="freebots.html">Free Bots</a>
     </div>
-
-    <footer class="footer">© <span id="year"></span> KIMHUBFX</footer>
   </main>
-
-  <script>document.getElementById('year').textContent = new Date().getFullYear();</script>
 </body>
 </html>
