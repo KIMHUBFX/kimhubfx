@@ -1,28 +1,40 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Login | KIMHUBFX</title>
-    <link rel="stylesheet" href="style.css">
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>KIMHUBFX • Login</title>
+  <link rel="stylesheet" href="style.css" />
 </head>
-
 <body>
-<div class="container">
-    <h2>Login to Deriv</h2>
-    <button id="loginBtn" class="btn">Login</button>
-</div>
+  <nav class="top-nav small">
+    <a class="nav-left brand" href="index.html">KIMHUBFX</a>
+    <div class="nav-right">
+      <a class="nav-btn" href="wallet.html">Deposit / Withdraw</a>
+      <a class="nav-btn red" href="login.html">Log in</a>
+      <a class="nav-btn" href="https://deriv.com/signup/?partner_id=kimhuhfx.com" target="_blank" rel="noopener">Sign up</a>
+    </div>
+  </nav>
 
-<script>
-    const app_id = 112604;
-    const redirect = "https://kimhubfx.github.io/KIMHUBFX/redirect.html";
+  <main class="center small">
+    <h2>Login to KIMHUBFX</h2>
+    <p>Use Deriv's secure OAuth. After approving you'll be redirected to the dashboard.</p>
 
-    document.getElementById("loginBtn").addEventListener("click", () => {
-        const url =
-            `https://oauth.deriv.com/oauth2/authorize?app_id=${app_id}&redirect_uri=${redirect}`;
-        window.location.href = url;
+    <div class="actions stacked">
+      <button id="loginBtn" class="btn">Login</button>
+      <a class="btn ghost" href="index.html">Back to Home</a>
+    </div>
+
+    <div class="note">If you prefer to create an account, click Sign up.</div>
+  </main>
+
+  <script>
+    document.getElementById('loginBtn').addEventListener('click', () => {
+      const app_id = 112604;
+      const redirect = "https://kimhubfx.github.io/KIMHUBFX/redirect.html";
+      const oauth_url = `https://oauth.deriv.com/oauth2/authorize?app_id=${app_id}&l=EN&response_type=token&redirect_uri=${encodeURIComponent(redirect)}`;
+      window.location.href = oauth_url;
     });
-</script>
-
+  </script>
 </body>
 </html>
