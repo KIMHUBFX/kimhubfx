@@ -1,209 +1,66 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>KIMHUBFX</title>
-
-    <style>
-        body {
-            margin: 0;
-            font-family: Arial, sans-serif;
-            background: #f3f3f3;
-        }
-
-        /* TOP BAR */
-        .top-bar {
-            background: #ff444f;
-            color: white;
-            padding: 15px;
-            font-size: 22px;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            font-weight: bold;
-        }
-
-        .menu-btn {
-            font-size: 28px;
-            cursor: pointer;
-        }
-
-        /* Login / Create Account */
-        .auth-buttons {
-            display: flex;
-            align-items: center;
-            gap: 12px;
-            white-space: nowrap;
-        }
-
-        .auth-btn {
-            background: white;
-            color: #ff444f;
-            padding: 8px 14px;
-            border-radius: 5px;
-            font-size: 14px;
-            cursor: pointer;
-            font-weight: bold;
-        }
-
-        /* HORIZONTAL MENU */
-        .horizontal-menu {
-            background: white;
-            padding: 14px 10px;
-            display: flex;
-            justify-content: space-around;
-            border-bottom: 1px solid #ccc;
-        }
-
-        .menu-item {
-            font-weight: bold;
-            color: #ff444f;
-            font-size: 16px;
-            cursor: pointer;
-            padding: 6px 10px;
-            white-space: nowrap;
-        }
-
-        /* CENTER BOX */
-        .center-box {
-            width: 90%;
-            max-width: 400px;
-            margin: 60px auto;
-            text-align: center;
-            background: white;
-            padding: 25px;
-            border-radius: 10px;
-        }
-
-        /* SIDEBAR */
-        .sidebar {
-            height: 100%;
-            width: 0;
-            position: fixed;
-            background: white;
-            top: 0;
-            left: 0;
-            z-index: 1000;
-            overflow-x: hidden;
-            transition: 0.3s;
-            padding-top: 20px;
-            border-right: 1px solid #ddd;
-        }
-
-        .sidebar.open {
-            width: 260px;
-        }
-
-        .sidebar h2 {
-            text-align: center;
-            color: #ff444f;
-            margin-top: 0;
-            margin-bottom: 20px;
-        }
-
-        .sidebar a {
-            display: block;
-            padding: 14px 20px;
-            font-size: 16px;
-            color: #333;
-            text-decoration: none;
-        }
-
-        .sidebar a:hover {
-            background: #ffe5e8;
-        }
-
-        .close-btn {
-            font-size: 30px;
-            padding: 10px;
-            cursor: pointer;
-            color: #ff444f;
-        }
-
-        .section-title {
-            margin: 20px 0 8px;
-            padding-left: 20px;
-            font-size: 14px;
-            font-weight: bold;
-            color: #888;
-            text-transform: uppercase;
-        }
-    </style>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>KIMHUBFX</title>
+<link rel="stylesheet" href="style.css" />
 </head>
-
 <body>
+  <!-- Sidebar (shared) -->
+  <div id="sidebar" class="sidebar">
+    <div class="side-inner">
+      <h2>KIMHUBFX</h2>
+      <div class="section-title">Account</div>
+      <a href="#">Account Settings</a>
+      <a href="#">Cashier</a>
+      <a href="#" onclick="alert('Toggle theme');">Dark Theme</a>
 
-    <!-- SIDEBAR -->
-    <div id="sidebar" class="sidebar">
-        <span class="close-btn" onclick="closeMenu()">×</span>
-        <h2>KIMHUBFX</h2>
+      <div class="section-title">Channels</div>
+      <a href="https://whatsapp.com/channel/0029Vb77BD8B4hdNphlldH3g" target="_blank">WhatsApp Channel</a>
+      <a href="https://www.youtube.com/@kimhtai" target="_blank">YouTube</a>
+      <a href="https://www.tiktok.com/@kimh.tai?_r=1&_t=ZM-91izOAFB0g7" target="_blank">TikTok</a>
+      <a href="https://t.me/kimhubfx" target="_blank">Telegram</a>
+      <a href="https://www.instagram.com/kimh.tai?igsh=c3ZucHNnOHdpMXM4" target="_blank">Instagram</a>
+      <a href="https://www.facebook.com/profile.php?id=61582999149557" target="_blank">Facebook</a>
+      <a href="https://wa.me/message/ZPIOXNGV3YSEM1" target="_blank">WhatsApp DM</a>
+    </div>
+  </div>
 
-        <div class="section-title">Account</div>
-        <a href="#">Account Settings</a>
-        <a href="#">Cashier</a>
-        <a href="#">Dark Theme</a>
-
-        <div class="section-title">Channels</div>
-        <a href="https://whatsapp.com/channel/0029Vb77BD8B4hdNphlldH3g" target="_blank">WhatsApp Channel</a>
-        <a href="https://www.youtube.com/@kimhtai" target="_blank">YouTube</a>
-        <a href="https://www.tiktok.com/@kimh.tai" target="_blank">TikTok</a>
-        <a href="https://www.instagram.com/kimh.tai" target="_blank">Instagram</a>
-        <a href="https://t.me/kimhubfx" target="_blank">Telegram</a>
-        <a href="https://www.facebook.com/profile.php?id=61582999149557" target="_blank">Facebook</a>
-        <a href="https://wa.me/message/ZPIOXNGV3YSEM1" target="_blank">WhatsApp DM</a>
+  <!-- Topbar -->
+  <header class="topbar">
+    <div class="left">
+      <button class="icon-btn" onclick="appUI.openMenu()">☰</button>
+      <span class="logo">KIMHUBFX</span>
     </div>
 
-    <!-- TOP BAR -->
-    <div class="top-bar">
-        <span class="menu-btn" onclick="openMenu()">☰</span>
-        <span>KIMHUBFX</span>
-
-        <div class="auth-buttons">
-            <div class="auth-btn" onclick="loginWithDeriv()">Login</div>
-            <div class="auth-btn" onclick="createAccount()">Create Account</div>
-        </div>
+    <div id="authContainer" class="auth-buttons">
+      <!-- login / signup injected by menu.js -->
     </div>
+  </header>
 
-    <!-- MAIN NAV (TABS) -->
-    <div class="horizontal-menu">
-        <div class="menu-item">Dashboard</div>
-        <div class="menu-item">DP Tool</div>
-        <div class="menu-item">Strategies</div>
-        <div class="menu-item">Analysis</div>
-        <div class="menu-item">Free Bots</div>
+  <!-- Horizontal menu (below) -->
+  <nav class="horizontal-menu">
+    <div class="menu-item" data-tab="dashboard" onclick="location.href='dashboard.html'">Dashboard</div>
+    <div class="menu-item" data-tab="dptool" onclick="location.href='dp-tool.html'">DP Tool</div>
+    <div class="menu-item" data-tab="analysis" onclick="location.href='analysis.html'">Strategies</div>
+    <div class="menu-item" data-tab="analysis-tool" onclick="location.href='analysis-tool.html'">Analysis Tool</div>
+    <div class="menu-item" data-tab="freebots" onclick="location.href='freebots.html'">FreeBots</div>
+    <div class="menu-item" data-tab="wallet" onclick="location.href='wallet.html'">Wallet</div>
+  </nav>
+
+  <main class="container">
+    <div class="center-box card">
+      <h1>Welcome to KIMHUBFX</h1>
+      <p class="muted">Fast and secure trading tools powered by Deriv</p>
+      <div style="margin-top:18px">
+        <button class="auth-btn" onclick="appUI.loginWithDeriv()">Login</button>
+        <button class="auth-btn" onclick="appUI.createAccountReferral()">Create Account</button>
+      </div>
     </div>
+  </main>
 
-    <!-- MAIN WELCOME BOX -->
-    <div class="center-box">
-        <h2>Welcome to KIMHUBFX</h2>
-        <p>Select an option above to continue.</p>
-    </div>
-
-    <script>
-        function openMenu() {
-            document.getElementById("sidebar").classList.add("open");
-        }
-
-        function closeMenu() {
-            document.getElementById("sidebar").classList.remove("open");
-        }
-
-        function loginWithDeriv() {
-            const redirectURL = "https://kimhubfx.github.io/kimhubfx/redirect.html";
-            const loginURL =
-                "https://oauth.deriv.com/oauth2/authorize" +
-                "?app_id=112604" +
-                "&force_login=1" +
-                "&redirect_uri=" + encodeURIComponent(redirectURL);
-
-            window.location.href = loginURL;
-        }
-
-        function createAccount() {
-            window.location.href = "https://app.deriv.com/signup/?ref=kimhubfx";
-        }
-    </script>
-
+  <script src="menu.js"></script>
+  <script>document.addEventListener('DOMContentLoaded', ()=> appUI.renderAuthButtons('authContainer'));</script>
 </body>
 </html>
