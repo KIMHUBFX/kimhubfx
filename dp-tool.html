@@ -1,44 +1,77 @@
 <div class="page-section">
-    <h2>DP Tool (Digit Prediction)</h2>
+    <h2>DP Tool</h2>
 
     <div class="card">
         <p class="muted">
-            This tool helps you analyze last digits, generate predictions,
-            and observe digit patterns from volatility indices.
+            This is your DP (Digits Pattern) analysis tool.  
+            You can add your pattern logic here later.
         </p>
 
-        <!-- Example digit prediction UI -->
-        <div class="dp-row">
-            <label>Select Index:</label>
-            <select id="dpIndex">
-                <option>Volatility 10</option>
-                <option>Volatility 25</option>
-                <option>Volatility 50</option>
-                <option>Volatility 75</option>
-                <option>Volatility 100</option>
+        <div class="dp-tool-box">
+
+            <label>Enter Digits Stream:</label>
+            <input id="dpInput" type="text" class="input" placeholder="e.g., 293847563829..." />
+
+            <label>Select Pattern:</label>
+            <select id="dpPattern" class="input">
+                <option value="repeat">Repeated digits</option>
+                <option value="even">Even digits</option>
+                <option value="odd">Odd digits</option>
+                <option value="pairs">Digit Pairs</option>
             </select>
+
+            <button class="btn" onclick="runDP()">Run Analysis</button>
         </div>
 
-        <div class="dp-row">
-            <label>Digit Count:</label>
-            <input id="dpCount" type="number" value="50">
+        <div class="card dp-results">
+            <h3>Results</h3>
+            <pre id="dpOutput" class="muted">Waiting for input…</pre>
         </div>
-
-        <button class="btn" onclick="runDP()">Run Analysis</button>
-
-        <div id="dpResults" class="results-box"></div>
     </div>
 </div>
 
 <script>
 function runDP() {
-    const index = document.getElementById('dpIndex').value;
-    const amount = document.getElementById('dpCount').value;
+    const text = document.getElementById("dpInput").value.trim();
+    const pattern = document.getElementById("dpPattern").value;
 
-    document.getElementById('dpResults').innerHTML = `
-        <h4>Results for: ${index}</h4>
-        <p>Analyzing last <b>${amount}</b> digits…</p>
-        <p class="muted">You can add real algorithm here later.</p>
-    `;
+    if (text === "") {
+        document.getElementById("dpOutput").innerText = "Please enter digits to analyze.";
+        return;
+    }
+
+    let result = "";
+
+    switch(pattern) {
+        case "repeat":
+            result = analyzeRepeats(text);
+            break;
+
+        case "even":
+            result = [...text].filter(n => n % 2 === 0).join(" ");
+            break;
+
+        case "odd":
+            result = [...text].filter(n => n % 2 !== 0).join(" ");
+            break;
+
+        case "pairs":
+            result = text.match(/../g)?.join(" | ") || "No pairs found";
+            break;
+    }
+
+    document.getElementById("dpOutput").innerText = result;
+}
+
+function analyzeRepeats(str) {
+    let repeats = {};
+    for (let i = 0; i < str.length; i++) {
+        const digit = str[i];
+        repeats[digit] = (repeats[digit] || 0) + 1;
+    }
+
+    return Object.keys(repeats)
+        .map(d => `Digit ${d} → ${repeats[d]} times`)
+        .join("\n");
 }
 </script>
