@@ -1,66 +1,82 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="utf-8" />
-<meta name="viewport" content="width=device-width,initial-scale=1" />
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
 <title>KIMHUBFX</title>
-<link rel="stylesheet" href="style.css" />
+<link rel="stylesheet" href="style.css">
 </head>
+
 <body>
-  <!-- Sidebar (shared) -->
-  <div id="sidebar" class="sidebar">
-    <div class="side-inner">
-      <h2>KIMHUBFX</h2>
-      <div class="section-title">Account</div>
-      <a href="#">Account Settings</a>
-      <a href="#">Cashier</a>
-      <a href="#" onclick="alert('Toggle theme');">Dark Theme</a>
 
-      <div class="section-title">Channels</div>
-      <a href="https://whatsapp.com/channel/0029Vb77BD8B4hdNphlldH3g" target="_blank">WhatsApp Channel</a>
-      <a href="https://www.youtube.com/@kimhtai" target="_blank">YouTube</a>
-      <a href="https://www.tiktok.com/@kimh.tai?_r=1&_t=ZM-91izOAFB0g7" target="_blank">TikTok</a>
-      <a href="https://t.me/kimhubfx" target="_blank">Telegram</a>
-      <a href="https://www.instagram.com/kimh.tai?igsh=c3ZucHNnOHdpMXM4" target="_blank">Instagram</a>
-      <a href="https://www.facebook.com/profile.php?id=61582999149557" target="_blank">Facebook</a>
-      <a href="https://wa.me/message/ZPIOXNGV3YSEM1" target="_blank">WhatsApp DM</a>
-    </div>
+<!-- SIDEBAR -->
+<div id="sidebar" class="sidebar">
+  <div class="side-inner">
+    <h2>KIMHUBFX</h2>
+
+    <div class="section-title">Account</div>
+    <a href="#">Account Settings</a>
+    <a href="#">Cashier</a>
+    <a href="#">Dark Theme</a>
+
+    <div class="section-title">Channels</div>
+    <a href="https://wa.me/254724753475" target="_blank">WhatsApp</a>
+    <a href="https://whatsapp.com/channel/0029Vb77BD8B4hdNphlldH3g" target="_blank">WhatsApp Channel</a>
+    <a href="https://www.youtube.com/@kimhtai" target="_blank">YouTube</a>
+    <a href="https://www.tiktok.com/@kimh.tai" target="_blank">TikTok</a>
+    <a href="https://t.me/kimhubfx" target="_blank">Telegram</a>
+    <a href="https://www.instagram.com/kimh.tai" target="_blank">Instagram</a>
+    <a href="https://www.facebook.com/profile.php?id=61582999149557" target="_blank">Facebook</a>
   </div>
+</div>
 
-  <!-- Topbar -->
-  <header class="topbar">
-    <div class="left">
-      <button class="icon-btn" onclick="appUI.openMenu()">☰</button>
-      <span class="logo">KIMHUBFX</span>
-    </div>
+<!-- TOPBAR -->
+<header class="topbar">
+  <div class="left">
+    <button class="icon-btn" onclick="appUI.openMenu()">☰</button>
+    <span class="logo">KIMHUBFX</span>
+  </div>
+  <div id="authContainer" class="auth-buttons"></div>
+</header>
 
-    <div id="authContainer" class="auth-buttons">
-      <!-- login / signup injected by menu.js -->
-    </div>
-  </header>
+<!-- HORIZONTAL MENU -->
+<nav class="horizontal-menu">
+  <div onclick="loadPage('dashboard.html')">Dashboard</div>
+  <div onclick="loadPage('botbuilder.html')">Bot Builder</div>
+  <div onclick="loadPage('freebots.html')">FreeBots</div>
+  <div onclick="loadPage('analysis-tool.html')">Analysis Tool</div>
+  <div onclick="loadPage('analysis.html')">Analysis</div>
+  <div onclick="loadPage('dp-tool.html')">DP Tool</div>
+  <div onclick="loadPage('dtrader.html')">DTrader</div>
+  <div onclick="loadPage('wallet.html')">Wallet</div>
+</nav>
 
-  <!-- Horizontal menu (below) -->
-  <nav class="horizontal-menu">
-    <div class="menu-item" data-tab="dashboard" onclick="location.href='dashboard.html'">Dashboard</div>
-    <div class="menu-item" data-tab="dptool" onclick="location.href='dp-tool.html'">DP Tool</div>
-    <div class="menu-item" data-tab="analysis" onclick="location.href='analysis.html'">Strategies</div>
-    <div class="menu-item" data-tab="analysis-tool" onclick="location.href='analysis-tool.html'">Analysis Tool</div>
-    <div class="menu-item" data-tab="freebots" onclick="location.href='freebots.html'">FreeBots</div>
-    <div class="menu-item" data-tab="wallet" onclick="location.href='wallet.html'">Wallet</div>
-  </nav>
+<!-- PAGE CONTENT -->
+<main class="container" id="pageContent">
+  <h2>Dashboard</h2>
+  <div class="card">
+    Dashboard content here…
+  </div>
+</main>
 
-  <main class="container">
-    <div class="center-box card">
-      <h1>Welcome to KIMHUBFX</h1>
-      <p class="muted">Fast and secure trading tools powered by Deriv</p>
-      <div style="margin-top:18px">
-        <button class="auth-btn" onclick="appUI.loginWithDeriv()">Login</button>
-        <button class="auth-btn" onclick="appUI.createAccountReferral()">Create Account</button>
-      </div>
-    </div>
-  </main>
+<script src="menu.js"></script>
 
-  <script src="menu.js"></script>
-  <script>document.addEventListener('DOMContentLoaded', ()=> appUI.renderAuthButtons('authContainer'));</script>
+<script>
+// Load any page into #pageContent
+function loadPage(page) {
+    fetch(page)
+    .then(res => res.text())
+    .then(html => {
+        document.getElementById("pageContent").innerHTML = html;
+    });
+}
+
+// Load Dashboard by default
+document.addEventListener("DOMContentLoaded", () => {
+    appUI.renderAuthButtons('authContainer');
+    loadPage("dashboard.html");
+});
+</script>
+
 </body>
 </html>
