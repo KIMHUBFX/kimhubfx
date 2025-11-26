@@ -6,19 +6,23 @@
 <p>Please wait...</p>
 
 <script>
-    // Extract token returned from Deriv OAuth
-    const urlParams = new URLSearchParams(window.location.search);
-    const token = urlParams.get("token");
+    // Deriv returns ?token1=xxxxx&token2=xxxxx etc.
+    const params = new URLSearchParams(window.location.search);
+
+    let token = null;
+    for (const [key, value] of params.entries()) {
+        if (key.startsWith("token")) {
+            token = value;
+            break;
+        }
+    }
 
     if (token) {
-        // Save token
         localStorage.setItem("auth_token", token);
-
-        // Go to dashboard
         window.location.href = "dashboard.html";
     } else {
         document.body.innerHTML = "<h3>No token received. Please login again.</h3>";
-        setTimeout(() => window.location.href = "login.html", 2000);
+        setTimeout(() => window.location.href = "index.html", 2000);
     }
 </script>
 
