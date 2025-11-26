@@ -1,1 +1,31 @@
-window.location.href = "https://oauth.deriv.com/oauth2/authorize?app_id=112604&redirect_uri=https%3A%2F%2Fkimhubfx.github.io%2Fkimhubfx%2Fredirect.html";
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login • KIMHUBFX</title>
+</head>
+<body style="text-align:center; font-family:Arial; margin-top:60px;">
+
+<h2>Connecting to Deriv...</h2>
+
+<script>
+  // YOUR APP ID
+  const app_id = 112604;
+
+  // YOUR REDIRECT URL
+  const redirect = "https://kimhubfx.github.io/kimhubfx/redirect.html";
+
+  // Build OAuth link
+  const url =
+    "https://oauth.deriv.com/oauth2/authorize" +
+    "?app_id=" + app_id +
+    "&l=EN" +
+    "&redirect_uri=" + encodeURIComponent(redirect);
+
+  // Redirect user to Deriv login
+  window.location.href = url;
+</script>
+
+</body>
+</html>
