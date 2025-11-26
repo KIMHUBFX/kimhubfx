@@ -1,69 +1,167 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>KIMHUBFX • Dashboard</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>KIMHUBFX Dashboard</title>
 
-  <!-- FIXED: Removed leading "/" -->
-  <link rel="stylesheet" href="style.css" />
+    <style>
+        body {
+            margin: 0;
+            font-family: Arial, sans-serif;
+            background: #f5f5f5;
+        }
+
+        /* Top Bar */
+        .topbar {
+            background: #ff4d4d;
+            color: white;
+            padding: 15px;
+            display: flex;
+            align-items: center;
+            font-size: 22px;
+            font-weight: bold;
+        }
+
+        .menu-btn {
+            font-size: 28px;
+            margin-right: 15px;
+            cursor: pointer;
+        }
+
+        /* Left Slide Menu */
+        .side-menu {
+            width: 260px;
+            height: 100%;
+            background: white;
+            position: fixed;
+            top: 0;
+            left: -260px;
+            transition: 0.3s;
+            padding-top: 20px;
+            box-shadow: 2px 0 6px rgba(0,0,0,0.2);
+        }
+
+        .side-menu h2 {
+            text-align: center;
+            color: #ff4d4d;
+        }
+
+        .side-menu a {
+            display: block;
+            padding: 15px;
+            color: black;
+            text-decoration: none;
+            border-bottom: 1px solid #eee;
+            font-size: 18px;
+        }
+
+        .side-menu a:hover {
+            background: #ffe6e6;
+        }
+
+        /* Horizontal Menu */
+        .nav-scroll {
+            display: flex;
+            overflow-x: auto;
+            background: white;
+            border-bottom: 1px solid #ddd;
+            white-space: nowrap;
+        }
+
+        .nav-scroll div {
+            padding: 14px 25px;
+            font-size: 16px;
+            cursor: pointer;
+            flex-shrink: 0;
+        }
+
+        .nav-scroll div:hover {
+            background: #ffefef;
+        }
+
+        /* Balance Section */
+        .balance-box {
+            margin: 20px;
+            background: white;
+            border-radius: 10px;
+            padding: 20px;
+            text-align: center;
+            font-size: 22px;
+            font-weight: bold;
+            color: #333;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+
+    </style>
 </head>
 <body>
-  <nav class="top-nav">
-    <a class="nav-left brand" href="index.html">KIMHUBFX</a>
 
-    <div class="nav-right">
-      <a class="nav-btn inactive" id="dp-tool">DP Tool</a>
-      <a class="nav-btn" href="strategies.html">Strategies</a>
-      <a class="nav-btn" href="https://www.tradingview.com/chart/" target="_blank" rel="noopener">Analysis</a>
-      <a class="nav-btn" href="freebots.html">Free Bots</a>
-      <a class="nav-btn" href="wallet.html">Deposit / Withdraw</a>
+    <!-- LEFT MENU -->
+    <div id="sideMenu" class="side-menu">
+        <h2>KIMHUBFX</h2>
 
-      <span id="accountBox" class="account-box">—</span>
-      <button id="logoutBtn" class="btn small">Logout</button>
+        <!-- Menu Links -->
+        <a href="#">Account Settings</a>
+        <a href="#">Cashier</a>
+        <a href="#">Dark Theme</a>
+
+        <!-- Channels -->
+        <a href="https://www.youtube.com/@kimhtai" target="_blank">YouTube</a>
+        <a href="https://t.me/kimhubfx" target="_blank">Telegram</a>
+        <a href="https://www.tiktok.com/@kimh.tai" target="_blank">TikTok</a>
+        <a href="https://www.instagram.com/kimh.tai" target="_blank">Instagram</a>
+        <a href="https://www.facebook.com/profile.php?id=61582999149557" target="_blank">Facebook</a>
+        <a href="https://whatsapp.com/channel/0029Vb77BD8B4hdNphlldH3g" target="_blank">WhatsApp Channel</a>
+        <a href="https://wa.me/message/ZPIOXNGV3YSEM1" target="_blank">DM on WhatsApp</a>
     </div>
-  </nav>
 
-  <main class="center">
-    <section class="card wide">
-      <div class="row">
-        <div>
-          <h3>Account Balance</h3>
-          <div id="balanceBox" class="big">—</div>
-        </div>
+    <!-- TOP BAR -->
+    <div class="topbar">
+        <span class="menu-btn" onclick="openMenu()">☰</span>
+        KIMHUBFX
+    </div>
 
-        <div>
-          <h3>Connection</h3>
-          <div id="status" class="status waiting">Waiting for connection...</div>
-        </div>
-      </div>
-    </section>
+    <!-- HORIZONTAL MENU -->
+    <div class="nav-scroll">
+        <div>Dashboard</div>
+        <div>Bot Builder</div>
+        <div>DTrader</div>
+        <div>Analysis Tool</div>
+        <div>DP Tool</div>
+        <div>Analysis</div>
+        <div>FreeBots</div>
+    </div>
 
-    <section class="card">
-      <h3>R_100 Live Price</h3>
-      <div id="tickBox" class="tick">—</div>
-      <div id="tickTime" class="muted">—</div>
-    </section>
+    <!-- BALANCE CARD -->
+    <div class="balance-box">
+        Balance: <span id="balance">Loading...</span>
+    </div>
 
-    <section class="card">
-      <h3>Event History</h3>
-      <div id="history" class="history">No events yet</div>
-    </section>
-  </main>
+    <script>
+        function openMenu() {
+            document.getElementById("sideMenu").style.left = "0px";
+        }
 
-  <!-- FIXED: Removed leading "/" -->
-  <script src="app.js"></script>
+        // Close menu when clicking outside
+        document.addEventListener("click", function(e) {
+            if (!document.getElementById("sideMenu").contains(e.target) &&
+                !e.target.classList.contains("menu-btn")) {
+                document.getElementById("sideMenu").style.left = "-260px";
+            }
+        });
 
-  <script>
-    // DP Tool inactive behavior
-    document.getElementById('dp-tool').addEventListener('click', (e) => {
-      e.preventDefault();
-      alert('DP Tool will be available soon.');
-    });
+        /* Load Balance From LocalStorage (from redirect.html token) */
+        const token = localStorage.getItem("auth_token");
 
-    document.getElementById('logoutBtn').addEventListener('click', () => {
-      logout();
-    });
-  </script>
+        if (!token) {
+            // If not logged in → send back to login
+            window.location.href = "index.html";
+        } else {
+            // Show demo balance (we will connect Deriv API later)
+            document.getElementById("balance").innerText = "$0.00";
+        }
+    </script>
+
 </body>
 </html>
