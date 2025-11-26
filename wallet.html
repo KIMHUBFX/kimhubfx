@@ -1,25 +1,17 @@
 <!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>Wallet • KIMHUBFX</title>
-  <link rel="stylesheet" href="/kimhubfx/style.css" />
-</head>
+<html>
+<head><meta charset="utf-8"/><meta name="viewport" content="width=device-width,initial-scale=1"/><title>Wallet</title>
+<link rel="stylesheet" href="style.css" /></head>
 <body>
-  <nav class="top-nav small">
-    <a class="nav-left brand" href="/kimhubfx/index.html">KIMHUBFX</a>
-    <div class="nav-right">
-      <a class="nav-btn" href="/kimhubfx/login.html">Log in</a>
-      <a class="nav-btn" href="https://deriv.com/signup/?partner_id=kimhubfx.com" target="_blank">Sign up</a>
-    </div>
-  </nav>
+  <div id="sidebar" class="sidebar"><div class="side-inner"><h2>KIMHUBFX</h2></div></div>
+  <header class="topbar"><div class="left"><button class="icon-btn" onclick="appUI.openMenu()">☰</button><span class="logo">KIMHUBFX</span></div><div id="authContainer" class="auth-buttons"></div></header>
+  <nav class="horizontal-menu"><div class="menu-item" onclick="location.href='dashboard.html'">Dashboard</div><div class="menu-item" onclick="location.href='bot-builder.html'">Bot Builder</div><div class="menu-item" onclick="location.href='dtrader.html'">DTrader</div><div class="menu-item" onclick="location.href='analysis-tool.html'">Analysis Tool</div><div class="menu-item" onclick="location.href='dp-tool.html'">DP Tool</div><div class="menu-item" onclick="location.href='freebots.html'">FreeBots</div><div class="menu-item active">Wallet</div></nav>
 
-  <main class="center small">
-    <h2>Deposit / Withdraw (Wallet)</h2>
-    <p>This page links you to the real Deriv cashier. Click the button below to open the Deriv cashier in a new tab.</p>
-    <a class="btn" href="https://app.deriv.com/cashier/" target="_blank" rel="noopener">Open Deriv Cashier</a>
-    <p><a href="/kimhubfx/dashboard.html">Back to dashboard</a></p>
+  <main class="container">
+    <div class="card"><h2>Wallet</h2><p class="muted">Deposit & Withdraw — login required to perform transactions.</p></div>
   </main>
+
+  <script src="menu.js"></script>
+  <script>document.addEventListener('DOMContentLoaded', ()=> appUI.renderAuthButtons('authContainer'));</script>
 </body>
 </html>
