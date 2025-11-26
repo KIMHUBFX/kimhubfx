@@ -1,0 +1,17 @@
+<!DOCTYPE html>
+<html>
+<head><meta charset="utf-8"/><meta name="viewport" content="width=device-width,initial-scale=1"/><title>Analysis</title>
+<link rel="stylesheet" href="style.css" /></head>
+<body>
+  <div id="sidebar" class="sidebar"><div class="side-inner"><h2>KIMHUBFX</h2></div></div>
+  <header class="topbar"><div class="left"><button class="icon-btn" onclick="appUI.openMenu()">☰</button><span class="logo">KIMHUBFX</span></div><div id="authContainer" class="auth-buttons"></div></header>
+  <nav class="horizontal-menu"><div class="menu-item" onclick="location.href='dashboard.html'">Dashboard</div><div class="menu-item" onclick="location.href='bot-builder.html'">Bot Builder</div><div class="menu-item" onclick="location.href='dtrader.html'">DTrader</div><div class="menu-item" onclick="location.href='analysis-tool.html'">Analysis Tool</div><div class="menu-item" onclick="location.href='dp-tool.html'">DP Tool</div><div class="menu-item active">Analysis</div></nav>
+
+  <main class="container">
+    <div class="card"><h2>Analysis</h2><p class="muted">Market analysis and tools.</p></div>
+  </main>
+
+  <script src="menu.js"></script>
+  <script>document.addEventListener('DOMContentLoaded', ()=> appUI.renderAuthButtons('authContainer'));</script>
+</body>
+</html>
