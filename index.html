@@ -36,8 +36,6 @@
     <button class="icon-btn" onclick="appUI.openMenu()">☰</button>
     <span class="logo">KIMHUBFX</span>
   </div>
-
-  <!-- Login / Create Account -->
   <div id="authContainer" class="auth-buttons"></div>
 </header>
 
@@ -53,30 +51,24 @@
   <div onclick="loadPage('wallet.html')">Wallet</div>
 </nav>
 
-<!-- MAIN PAGE CONTENT (AUTO LOADS HERE) -->
+<!-- PAGE CONTENT -->
 <main class="container" id="pageContent">
-  <!-- Default content shown before loading -->
-  <h2>Loading…</h2>
+  <!-- content loads here -->
 </main>
 
-<!-- Menu + Auth scripts -->
 <script src="menu.js"></script>
 
 <script>
-// Load content pages dynamically
+// Load any page into #pageContent
 function loadPage(page) {
     fetch(page)
     .then(res => res.text())
     .then(html => {
         document.getElementById("pageContent").innerHTML = html;
-    })
-    .catch(() => {
-        document.getElementById("pageContent").innerHTML =
-          "<div class='card'>Failed to load "+page+"</div>";
     });
 }
 
-// Load Dashboard when user opens site
+// Load Dashboard by default
 document.addEventListener("DOMContentLoaded", () => {
     appUI.renderAuthButtons('authContainer');
     loadPage("dashboard.html");
