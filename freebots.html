@@ -1,30 +1,38 @@
 <!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>Free Bots • KIMHUBFX</title>
-  <link rel="stylesheet" href="/kimhubfx/style.css" />
-</head>
+<html>
+<head><meta charset="utf-8"/><meta name="viewport" content="width=device-width,initial-scale=1"/><title>FreeBots</title>
+<link rel="stylesheet" href="style.css" /></head>
 <body>
-  <nav class="top-nav small">
-    <a class="nav-left brand" href="/kimhubfx/index.html">KIMHUBFX</a>
-    <div class="nav-right">
-      <a class="nav-btn" href="/kimhubfx/wallet.html">Deposit / Withdraw</a>
-      <a class="nav-btn" href="/kimhubfx/login.html">Log in</a>
-      <a class="nav-btn" href="https://deriv.com/signup/?partner_id=kimhubfx.com" target="_blank">Sign up</a>
+  <div id="sidebar" class="sidebar"><div class="side-inner"><h2>KIMHUBFX</h2></div></div>
+  <header class="topbar"><div class="left"><button class="icon-btn" onclick="appUI.openMenu()">☰</button><span class="logo">KIMHUBFX</span></div><div id="authContainer" class="auth-buttons"></div></header>
+  <nav class="horizontal-menu"><div class="menu-item" onclick="location.href='dashboard.html'">Dashboard</div><div class="menu-item" onclick="location.href='bot-builder.html'">Bot Builder</div><div class="menu-item" onclick="location.href='dtrader.html'">DTrader</div><div class="menu-item" onclick="location.href='analysis-tool.html'">Analysis Tool</div><div class="menu-item" onclick="location.href='dp-tool.html'">DP Tool</div><div class="menu-item active">FreeBots</div></nav>
+
+  <main class="container">
+    <div class="card">
+      <h2>Free Bots</h2>
+      <div id="freebotsList" class="freebots-grid">
+        <div class="freebot-card">
+          <h4>Even/Odd Bot</h4>
+          <p class="muted">Basic even/odd strategy</p>
+          <button class="btn" onclick="openBot('evenodd')">Open</button>
+        </div>
+        <div class="freebot-card">
+          <h4>Martingale Bot</h4>
+          <p class="muted">Staircase martingale</p>
+          <button class="btn" onclick="openBot('martingale')">Open</button>
+        </div>
+      </div>
     </div>
-  </nav>
-
-  <main class="center small">
-    <h2>Free Bots</h2>
-    <p>Here you'll be able to import and list bots. For now this page is a placeholder — you can upload bots later.</p>
-
-    <div class="bot-list">
-      <div class="bot-card">No bots yet — upload later.</div>
-    </div>
-
-    <p><a href="/kimhubfx/index.html">Back to home</a></p>
   </main>
+
+  <script src="menu.js"></script>
+  <script>
+    document.addEventListener('DOMContentLoaded', ()=> appUI.renderAuthButtons('authContainer'));
+    function openBot(id){
+      if(!appUI.isLoggedIn()){ alert('Please login to use this bot.'); window.location.href='index.html'; return; }
+      alert('Opening bot: '+id);
+      // open bot editor or run
+    }
+  </script>
 </body>
-</html>
+    </html>
