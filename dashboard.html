@@ -1,40 +1,60 @@
-<div class="section-title">Channels</div>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Dashboard • KIMHUBFX</title>
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
 
-<!-- TOGGLE BUTTON -->
-<button id="toggleSources" onclick="toggleSources()" 
-style="width:90%;margin:10px;border:none;padding:10px;background:#ff4d4d;color:white;font-weight:bold;border-radius:5px;">
-    Show / Hide Sources
-</button>
+<div id="sidebar" class="sidebar">
+  <div class="side-inner">
+    <h2>KIMHUBFX</h2>
 
-<!-- SOURCES WRAPPER -->
-<div id="sourcesBox">
+    <div class="section-title">Account</div>
+    <a href="#">Account Settings</a>
+    <a href="#">Cashier</a>
+    <a href="#">Dark Theme</a>
 
-    <a href="https://whatsapp.com/channel/0029Vb77BD8B4hdNphlldH3g" target="_blank">
-        <img src="https://img.icons8.com/color/26/whatsapp.png"> WhatsApp Channel
-    </a>
-
-    <a href="https://www.youtube.com/@kimhtai" target="_blank">
-        <img src="https://img.icons8.com/color/26/youtube-play.png"> YouTube
-    </a>
-
-    <a href="https://www.tiktok.com/@kimh.tai" target="_blank">
-        <img src="https://img.icons8.com/ios-filled/26/tiktok--v1.png"> TikTok
-    </a>
-
-    <a href="https://t.me/kimhubfx" target="_blank">
-        <img src="https://img.icons8.com/color/26/telegram-app.png"> Telegram
-    </a>
-
-    <a href="https://www.instagram.com/kimh.tai" target="_blank">
-        <img src="https://img.icons8.com/color/26/instagram-new.png"> Instagram
-    </a>
-
-    <a href="https://www.facebook.com/profile.php?id=61582999149557" target="_blank">
-        <img src="https://img.icons8.com/color/26/facebook-new.png"> Facebook
-    </a>
-
-    <a href="https://wa.me/message/ZPIOXNGV3YSEM1" target="_blank">
-        <img src="https://img.icons8.com/color/26/whatsapp.png"> WhatsApp DM
-    </a>
-
+    <div class="section-title">Channels</div>
+    <a href="https://whatsapp.com/channel/0029Vb77BD8B4hdNphlldH3g" target="_blank">WhatsApp Channel</a>
+    <a href="https://www.youtube.com/@kimhtai" target="_blank">YouTube</a>
+    <a href="https://www.tiktok.com/@kimh.tai" target="_blank">TikTok</a>
+    <a href="https://t.me/kimhubfx" target="_blank">Telegram</a>
+    <a href="https://www.instagram.com/kimh.tai" target="_blank">Instagram</a>
+    <a href="https://www.facebook.com/profile.php?id=61582999149557" target="_blank">Facebook</a>
+    <a href="https://wa.me/message/ZPIOXNGV3YSEM1" target="_blank">WhatsApp DM</a>
+  </div>
 </div>
+
+<header class="topbar">
+  <div class="left">
+    <button class="icon-btn" onclick="appUI.openMenu()">☰</button>
+    <span class="logo">KIMHUBFX</span>
+  </div>
+  <div id="authContainer" class="auth-buttons"></div>
+</header>
+
+<nav class="horizontal-menu">
+  <div onclick="location.href='dashboard.html'">Dashboard</div>
+  <div onclick="location.href='bot-builder.html'">Bot Builder</div>
+  <div onclick="location.href='freebots.html'">FreeBots</div>
+  <div onclick="location.href='analysis-tool.html'">Analysis Tool</div>
+  <div onclick="location.href='analysis.html'">Analysis</div>
+  <div onclick="location.href='dp-tool.html'">DP Tool</div>
+  <div onclick="location.href='dtrader.html'">DTrader</div>
+  <div onclick="location.href='wallet.html'">Wallet</div>
+</nav>
+
+<main class="container">
+  <h2>Dashboard</h2>
+  <div class="card">Dashboard content here…</div>
+</main>
+
+<script src="menu.js"></script>
+<script>
+document.addEventListener("DOMContentLoaded", () => appUI.renderAuthButtons('authContainer'));
+</script>
+</body>
+</html>
