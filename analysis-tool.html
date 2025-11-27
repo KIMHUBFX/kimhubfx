@@ -1,469 +1,167 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="utf-8" />
-<meta name="viewport" content="width=device-width,initial-scale=1" />
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
 <title>Analysis Tool • KIMHUBFX</title>
-<link rel="stylesheet" href="style.css" />
+<link rel="stylesheet" href="style.css">
 <style>
-/* Minimal page-specific styles — won't override your main theme */
-.at-panel { padding:12px; gap:12px; display:flex; flex-direction:column; }
-.at-row { display:flex; gap:12px; align-items:center; flex-wrap:wrap; }
-.at-card { background:var(--card-bg, #0f1012); border-radius:8px; padding:12px; box-shadow:0 6px 18px rgba(0,0,0,0.4); border:1px solid rgba(255,255,255,0.03); }
-.at-grid { display:grid; grid-template-columns: 1fr 420px; gap:12px; align-items:start; }
-.market-controls select, .market-controls input { padding:8px; border-radius:6px; border:1px solid rgba(255,255,255,0.06); background:transparent; color:inherit; }
-.small { font-size:13px; color:var(--muted-color,#bbb); }
-.price-big { font-weight:900; font-size:24px; color:var(--accent,#ffbf00); }
-.last-digit { font-size:36px; font-weight:900; color:#ff444f; }
-.digit-grid { display:grid; grid-template-columns: repeat(5,1fr); gap:10px; }
-.digit-cell { text-align:center; padding:10px; border-radius:8px; background:rgba(255,255,255,0.02); }
-.digit-circle { width:64px; height:64px; border-radius:50%; display:flex; align-items:center; justify-content:center; font-weight:900; margin:0 auto; background:rgba(0,0,0,0.25); color:#fff; }
-.digit-circle.high { box-shadow:0 10px 30px rgba(16,185,129,0.14); border:2px solid rgba(16,185,129,0.25); }
-.digit-circle.low { box-shadow:0 10px 30px rgba(255,77,77,0.14); border:2px solid rgba(255,77,77,0.16); }
-.pct { margin-top:8px; font-weight:700; color:var(--accent,#ffbf00); }
-.stream { display:flex; gap:8px; overflow:auto; padding-top:8px; }
-.stream .tok { padding:6px 8px; border-radius:6px; font-weight:800; background:rgba(255,255,255,0.02); }
-.table { width:100%; border-collapse:collapse; }
-.table td, .table th { padding:6px 8px; border-bottom:1px solid rgba(255,255,255,0.02); font-size:13px; }
-.heatmap { display:flex; gap:6px; align-items:flex-end; height:120px; padding:6px; border-radius:6px; }
-.heatbar { flex:1; display:flex; align-items:flex-end; justify-content:center; border-radius:6px; min-width:18px; background:rgba(255,255,255,0.02); }
-.heatbar > div { width:100%; border-radius:6px 6px 0 0; text-align:center; color:#fff; font-size:12px; padding-top:4px; box-sizing:border-box; }
-.evenodd { margin-top:10px; }
-.evenodd .bar { height:12px; background:#eee; border-radius:6px; overflow:hidden; }
-.evenodd .bar > div { height:100%; }
-.controls .btn { padding:8px 12px; border-radius:6px; cursor:pointer; border:0; background:var(--btn-bg,#222); color:var(--btn-color,#fff); }
-.cond-row { display:flex; gap:8px; align-items:center; margin-top:8px; flex-wrap:wrap; }
-.signal { margin-top:8px; padding:10px; border-radius:8px; font-weight:900; text-align:center; }
-.signal.buy { background:rgba(16,185,129,0.12); color:#10b981; border:1px solid rgba(16,185,129,0.22); }
-.signal.sell { background:rgba(255,77,77,0.08); color:#ff4d4d; border:1px solid rgba(255,77,77,0.12); }
-.signal.wait { background:rgba(255,255,255,0.02); color:#ddd; border:1px solid rgba(255,255,255,0.03); }
-@media (max-width:980px){ .at-grid{grid-template-columns:1fr} .digit-grid{grid-template-columns:repeat(5,1fr)} }
+.analysis-wrap { padding: 15px; }
+.price-box { font-size: 22px; font-weight: 800; margin-bottom: 15px; }
+.digit-grid { display:grid; grid-template-columns:repeat(5,1fr); gap:12px; }
+.digit-cell { text-align:center; padding:10px; background:#111; border-radius:10px; }
+.digit-circle {
+  width:60px; height:60px; border-radius:50%; 
+  background:#000; color:white;
+  display:flex; align-items:center; justify-content:center;
+  font-size:22px; font-weight:900; margin:0 auto;
+}
+.digit-circle.high { box-shadow:0 0 12px #16a34a; }
+.digit-circle.low { box-shadow:0 0 12px #ff4d4d; }
+.digit-pct { margin-top:6px; font-weight:700; color:#ffbf00; }
+.stream { margin-top:15px; display:flex; flex-wrap:wrap; gap:8px; }
+.stream span { padding:6px 9px; border-radius:6px; font-weight:800; background:#222; color:#fff; }
 </style>
 </head>
 <body>
 
-<!-- Sidebar / Topbar kept same so page integrates with your site -->
+<!-- SIDEBAR -->
 <div id="sidebar" class="sidebar">
   <div class="side-inner">
     <h2>KIMHUBFX</h2>
+
+    <div class="section-title">Account</div>
+    <a href="#">Account Settings</a>
+    <a href="#">Cashier</a>
+    <a href="#">Dark Theme</a>
+
     <div class="section-title">Channels</div>
-    <a href="https://wa.me/254724753475" target="_blank">WhatsApp</a>
+    <a href="https://wa.me/254724753475" target="_blank">WhatsApp DM</a>
+    <a href="https://whatsapp.com/channel/0029Vb77BD8B4hdNphlldH3g" target="_blank">WhatsApp Channel</a>
     <a href="https://www.youtube.com/@kimhtai" target="_blank">YouTube</a>
-    <a href="https://t.me/kimhubfx" target="_blank">Telegram</a>
     <a href="https://www.tiktok.com/@kimh.tai" target="_blank">TikTok</a>
+    <a href="https://t.me/kimhubfx" target="_blank">Telegram</a>
     <a href="https://www.instagram.com/kimh.tai" target="_blank">Instagram</a>
     <a href="https://www.facebook.com/profile.php?id=61582999149557" target="_blank">Facebook</a>
   </div>
 </div>
 
+<!-- TOPBAR -->
 <header class="topbar">
-  <div class="left"><button class="icon-btn" onclick="appUI.openMenu()">☰</button><span class="logo">KIMHUBFX</span></div>
+  <div class="left">
+    <button class="icon-btn" onclick="appUI.openMenu()">☰</button>
+    <span class="logo">KIMHUBFX</span>
+  </div>
   <div id="authContainer" class="auth-buttons"></div>
 </header>
 
+<!-- HORIZONTAL MENU -->
 <nav class="horizontal-menu">
   <div onclick="location.href='dashboard.html'">Dashboard</div>
   <div onclick="location.href='bot-builder.html'">Bot Builder</div>
   <div onclick="location.href='freebots.html'">FreeBots</div>
-  <div class="menu-item active">Analysis Tool</div>
+  <div class="active">Analysis Tool</div>
+  <div onclick="location.href='analysis.html'">Analysis</div>
   <div onclick="location.href='dp-tool.html'">DP Tool</div>
   <div onclick="location.href='dtrader.html'">DTrader</div>
   <div onclick="location.href='wallet.html'">Wallet</div>
 </nav>
 
+<!-- MAIN CONTENT -->
 <main class="container">
-  <div class="at-panel">
+  <div class="analysis-wrap">
 
-    <!-- TOP CONTROLS -->
-    <div class="at-row at-card market-controls">
-      <label class="small">Market</label>
-      <select id="marketSelect">
-        <option value="R_10">Volatility 10</option>
-        <option value="R_25">Volatility 25</option>
-        <option value="R_50">Volatility 50</option>
-        <option value="R_75">Volatility 75</option>
-        <option value="R_100" selected>Volatility 100</option>
-
-        <option value="R_10_1S">Volatility 10 (1s)</option>
-        <option value="R_25_1S">Volatility 25 (1s)</option>
-        <option value="R_50_1S">Volatility 50 (1s)</option>
-        <option value="R_75_1S">Volatility 75 (1s)</option>
-        <option value="R_100_1S">Volatility 100 (1s)</option>
-
-        <option value="R_250">Volatility 250</option>
-        <option value="BOOM300">Boom 300</option><option value="BOOM500">Boom 500</option><option value="BOOM1000">Boom 1000</option>
-        <option value="CRASH300">Crash 300</option><option value="CRASH500">Crash 500</option><option value="CRASH1000">Crash 1000</option>
-        <option value="JD10">Jump 10</option><option value="JD25">Jump 25</option><option value="JD50">Jump 50</option>
-      </select>
-
-      <label class="small">History size</label>
-      <input id="historyInput" type="number" value="300" min="20" max="2000" />
-
-      <div class="controls">
-        <button id="connectBtn" class="btn">Connect</button>
-        <button id="disconnectBtn" class="btn" style="background:#666">Disconnect</button>
-        <button id="pauseBtn" class="btn" style="background:#444">Pause</button>
-      </div>
-
-      <div style="margin-left:auto">
-        <div class="small">Status: <span id="connStatus">Disconnected</span></div>
-      </div>
+    <div class="price-box">
+      Price: <span id="price">—</span>
     </div>
 
-    <!-- SUMMARY + GRID + RIGHT PANELS -->
-    <div class="at-row at-grid">
+    <div id="digitGrid" class="digit-grid"></div>
 
-      <div class="at-card">
-        <!-- Live summary -->
-        <div class="at-row">
-          <div>
-            <div class="small">Latest Price</div>
-            <div id="latestPrice" class="price-big">—</div>
-            <div id="latestTime" class="small">—</div>
-          </div>
-
-          <div style="margin-left:20px">
-            <div class="small">Last Digit</div>
-            <div id="lastDigit" class="last-digit">—</div>
-          </div>
-
-          <div style="margin-left:auto;text-align:right">
-            <div class="small">Total ticks</div>
-            <div id="totalTicks" style="font-weight:900">0</div>
-            <div style="margin-top:8px" id="signalHolder"></div>
-          </div>
-        </div>
-
-        <hr style="opacity:0.06;margin:12px 0">
-
-        <!-- Digit grid -->
-        <div id="digitGrid" class="digit-grid" aria-live="polite"></div>
-
-        <!-- Stream -->
-        <div class="stream" id="digitStream"></div>
-      </div>
-
-      <!-- RIGHT SIDE: heatmap, even/odd, prediction, trends -->
-      <div class="at-card">
-
-        <h3 style="margin-top:0">Heatmap & Even/Odd</h3>
-        <div id="heatmap" class="heatmap" style="margin-bottom:10px;"></div>
-
-        <div class="evenodd">
-          <div style="display:flex;justify-content:space-between"><div class="small">Even</div><div id="evenPct">—%</div></div>
-          <div class="bar" style="margin-bottom:8px"><div id="evenBar" style="width:0%;background:green"></div></div>
-
-          <div style="display:flex;justify-content:space-between"><div class="small">Odd</div><div id="oddPct">—%</div></div>
-          <div class="bar"><div id="oddBar" style="width:0%;background:#ff4d4d"></div></div>
-        </div>
-
-        <hr style="opacity:0.06;margin:12px 0">
-
-        <h3>Prediction Engine</h3>
-        <div class="small">Top frequency-based digits</div>
-        <div id="freqPred" style="margin:8px 0"></div>
-
-        <div class="small">Transition-based (last→next)</div>
-        <div id="markovPred" style="margin:8px 0"></div>
-
-        <button id="refreshPred" class="btn" style="margin-top:8px">Refresh</button>
-
-        <hr style="opacity:0.06;margin:12px 0">
-
-        <h3>Trending</h3>
-        <div class="small">Top digit: <span id="topDigit">—</span></div>
-        <div class="small" style="margin-top:8px">Current streak: <span id="streakCount">0</span></div>
-        <div id="recentList" style="margin-top:8px"></div>
-      </div>
-
-    </div>
-
-    <!-- Distribution table & Condition builder -->
-    <div class="at-row" style="gap:18px;flex-wrap:wrap">
-      <div class="at-card" style="flex:1;min-width:320px;">
-        <h3 style="margin-top:0">Digit Distribution</h3>
-        <div style="overflow:auto;max-height:260px">
-          <table class="table" id="digitTable">
-            <thead>
-              <tr><th>Digit</th><th style="text-align:right">Count</th><th style="text-align:right">Percent</th><th>Bar</th></tr>
-            </thead>
-            <tbody></tbody>
-          </table>
-        </div>
-      </div>
-
-      <div class="at-card" style="min-width:360px">
-        <h3 style="margin-top:0">Condition Builder & Signals</h3>
-
-        <div class="cond-row">
-          <label class="small">If</label>
-          <select id="condMetric">
-            <option value="pct_digit">Digit % (0-9)</option>
-            <option value="count_digit">Digit count</option>
-            <option value="even_pct">Even %</option>
-            <option value="odd_pct">Odd %</option>
-            <option value="over_pct">Over X %</option>
-          </select>
-
-          <input id="condDigit" type="number" class="small" placeholder="digit (0-9)" style="width:70px" />
-          <select id="condOp"><option value=">">&gt;</option><option value="<">&lt;</option><option value="=">=</option></select>
-          <input id="condValue" type="number" class="small" placeholder="value" style="width:90px" />
-          <button id="addCond" class="btn">Add</button>
-        </div>
-
-        <div style="margin-top:10px">
-          <div class="small">Active Conditions</div>
-          <div id="condsList" style="margin-top:8px"></div>
-        </div>
-
-        <div style="margin-top:12px">
-          <button id="evalSignals" class="btn">Evaluate Signals</button>
-          <div id="signalBox" style="margin-top:10px"></div>
-        </div>
-      </div>
-    </div>
+    <div class="stream" id="stream"></div>
 
   </div>
 </main>
 
 <script src="menu.js"></script>
 <script>
-/*
-  Full All-In-One Analysis Tool
-  - Uses Deriv public websocket (app_id=1089)
-  - Live ticks, digits 0..9, counts, percentages
-  - Heatmap, even/odd, over/under computation
-  - Prediction (frequency + Markov transition)
-  - Condition builder and signal evaluator
-  - All updates every tick
-*/
+document.addEventListener("DOMContentLoaded", () => {
+  appUI.renderAuthButtons("authContainer");
+  startDigits();
+});
 
-(function(){
-  const APP_ID = 1089;
-  let ws = null;
-  let market = document.getElementById('marketSelect').value;
-  let paused = false;
+function startDigits(){
+  let ws = new WebSocket("wss://ws.derivws.com/websockets/v3?app_id=1089");
 
-  // state
-  let historySize = parseInt(document.getElementById('historyInput').value || '300',10);
   let digits = [];
-  let counts = new Array(10).fill(0);
-  let transition = Array.from({length:10}, ()=> new Array(10).fill(0));
-  let last = null;
-  let streak = 0;
+  let count = Array(10).fill(0);
+  const maxTicks = 500;
 
-  // UI refs
-  const connStatus = document.getElementById('connStatus');
-  const latestPrice = document.getElementById('latestPrice');
-  const latestTime = document.getElementById('latestTime');
-  const lastDigitEl = document.getElementById('lastDigit');
-  const totalTicksEl = document.getElementById('totalTicks');
-  const digitGrid = document.getElementById('digitGrid');
-  const digitStream = document.getElementById('digitStream');
-  const digitTableBody = document.querySelector('#digitTable tbody');
-  const heatmapEl = document.getElementById('heatmap');
-  const evenPctEl = document.getElementById('evenPct');
-  const oddPctEl = document.getElementById('oddPct');
-  const evenBar = document.getElementById('evenBar');
-  const oddBar = document.getElementById('oddBar');
-  const topDigitEl = document.getElementById('topDigit');
-  const streakCountEl = document.getElementById('streakCount');
-  const recentList = document.getElementById('recentList');
-  const freqPred = document.getElementById('freqPred');
-  const markovPred = document.getElementById('markovPred');
-  const refreshPred = document.getElementById('refreshPred');
-  const signalHolder = document.getElementById('signalHolder');
-  const condMetric = document.getElementById('condMetric');
-  const condDigit = document.getElementById('condDigit');
-  const condOp = document.getElementById('condOp');
-  const condValue = document.getElementById('condValue');
-  const addCondBtn = document.getElementById('addCond');
-  const condsListEl = document.getElementById('condsList');
-  const evalSignalsBtn = document.getElementById('evalSignals');
-  const signalBox = document.getElementById('signalBox');
+  const priceEl = document.getElementById("price");
+  const digitGrid = document.getElementById("digitGrid");
+  const stream = document.getElementById("stream");
 
-  // initial setup: build digit grid and heatmap
-  function buildDigitGrid() {
-    digitGrid.innerHTML = '';
+  // Create digit boxes
+  for(let i=0;i<10;i++){
+    digitGrid.innerHTML += `
+      <div class="digit-cell">
+        <div class="digit-circle" id="d${i}">${i}</div>
+        <div class="digit-pct" id="p${i}">0%</div>
+      </div>
+    `;
+  }
+
+  ws.onopen = () => {
+    ws.send(JSON.stringify({ticks:"R_100", subscribe:1}));
+  };
+
+  ws.onmessage = (e) => {
+    let data = JSON.parse(e.data);
+    if(!data.tick) return;
+
+    let price = data.tick.quote;
+    priceEl.textContent = price;
+
+    let s = String(price);
+    let last = Number(s[s.length-1]);
+
+    digits.push(last);
+    count[last]++;
+
+    if(digits.length > maxTicks){
+      let removed = digits.shift();
+      count[removed]--;
+    }
+
+    updateDigits(count, digits);
+  };
+
+  function updateDigits(count, digits){
+    let total = digits.length || 1;
+
+    let max = Math.max(...count);
+    let min = Math.min(...count);
+
     for(let i=0;i<10;i++){
-      const el = document.createElement('div');
-      el.className = 'digit-cell';
-      el.innerHTML = `<div class="digit-circle" id="dc${i}">${i}</div><div class="pct" id="dp${i}">0.00%</div>`;
-      digitGrid.appendChild(el);
-    }
-  }
-  function buildHeatmap() {
-    heatmapEl.innerHTML = '';
-    for(let i=0;i<10;i++){
-      const bar = document.createElement('div');
-      bar.className = 'heatbar';
-      bar.dataset.digit = i;
-      const inner = document.createElement('div');
-      inner.style.height = '8%';
-      inner.textContent = '';
-      bar.appendChild(inner);
-      heatmapEl.appendChild(bar);
-    }
-  }
-  buildDigitGrid();
-  buildHeatmap();
+      let pct = (count[i]/total)*100;
+      document.getElementById("p"+i).textContent = pct.toFixed(2)+"%";
 
-  // conditions storage
-  let conditions = [];
+      let circle = document.getElementById("d"+i);
+      circle.classList.remove("high","low");
 
-  function addCondition(obj) {
-    conditions.push(obj);
-    renderConditions();
-  }
-  function removeCondition(idx) {
-    conditions.splice(idx,1);
-    renderConditions();
-  }
-  function renderConditions() {
-    condsListEl.innerHTML = '';
-    conditions.forEach((c,i) => {
-      const div = document.createElement('div');
-      div.className = 'small';
-      div.style.marginTop='6px';
-      div.innerHTML = `${c.metric} ${c.metric==='pct_digit' || c.metric==='count_digit' ? 'digit:'+c.digit : ''} ${c.op} ${c.value} <button onclick="removeCond(${i})" style="margin-left:8px" class="btn">x</button>`;
-      condsListEl.appendChild(div);
-    });
-    // expose remove function to global for inline btns
-    window.removeCond = removeCondition;
-  }
-
-  // helpers
-  function resetStats() {
-    digits = []; counts = new Array(10).fill(0); transition = Array.from({length:10}, ()=> new Array(10).fill(0));
-    last = null; streak = 0;
-  }
-
-  function addTick(price, epoch) {
-    if (paused) return;
-    // parse last numeric digit
-    const s = String(price);
-    let dChar = null;
-    for(let i=s.length-1;i>=0;i--){ const ch = s[i]; if(ch>='0' && ch<='9'){ dChar = ch; break; } }
-    if (dChar === null) return;
-    const d = Number(dChar);
-
-    digits.push(d);
-    counts[d] = (counts[d]||0)+1;
-    if (typeof last === 'number') transition[last][d] = (transition[last][d]||0)+1;
-
-    if (last === d) streak += 1; else streak = 1;
-    last = d;
-
-    // cap history
-    historySize = parseInt(document.getElementById('historyInput').value||'300',10) || 300;
-    while(digits.length > historySize){
-      const rem = digits.shift();
-      counts[rem] = Math.max(0, counts[rem]-1);
+      if(count[i] === max) circle.classList.add("high");
+      if(count[i] === min) circle.classList.add("low");
     }
 
-    // update UI
-    updateAll(price, epoch);
-  }
-
-  function updateAll(price, epoch) {
-    latestPrice.textContent = price;
-    latestTime.textContent = new Date((epoch||Date.now()/1000)*1000).toLocaleTimeString();
-    lastDigitEl.textContent = last===null?'—':last;
-    totalTicksEl.textContent = digits.length;
-
-    updateDigitGrid();
-    updateStream();
-    updateTable();
-    updateHeatmap();
-    updateEvenOdd();
-    updateTrending();
-    renderPredictions();
-  }
-
-  function updateDigitGrid() {
-    const total = digits.length || 1;
-    const maxCount = Math.max(...counts);
-    const minCount = Math.min(...counts);
-    for(let i=0;i<10;i++){
-      const pct = (counts[i]/total)*100;
-      const pctEl = document.getElementById('dp'+i);
-      const circ = document.getElementById('dc'+i);
-      pctEl.textContent = pct.toFixed(2)+'%';
-      circ.classList.remove('high','low');
-      if (counts[i] === maxCount && maxCount>0) circ.classList.add('high');
-      if (counts[i] === minCount && total>0) circ.classList.add('low');
-    }
-  }
-
-  function updateStream() {
-    digitStream.innerHTML = '';
-    const recent = digits.slice(-30).reverse();
-    recent.forEach(d=>{
-      const sp = document.createElement('div'); sp.className='tok'; sp.textContent = d;
-      sp.style.background = (d%2===0) ? 'rgba(16,185,129,0.08)' : 'rgba(255,77,77,0.06)';
-      sp.style.color = (d%2===0) ? '#10b981' : '#ff6b6b';
-      digitStream.appendChild(sp);
+    // Digit stream
+    stream.innerHTML = "";
+    digits.slice(-12).reverse().forEach(d=>{
+      let box = document.createElement("span");
+      box.textContent = d;
+      stream.appendChild(box);
     });
   }
+}
+</script>
 
-  function updateTable() {
-    const total = digits.length || 1; const maxCount = Math.max(...counts,1);
-    let rows='';
-    for(let i=0;i<10;i++){
-      const cnt = counts[i]||0; const pct = total===0?0:((cnt/total)*100).toFixed(2);
-      const barPerc = Math.round((cnt/maxCount)*100);
-      rows += `<tr><td>${i}</td><td style="text-align:right">${cnt}</td><td style="text-align:right">${pct}%</td><td style="width:40%"><div style="height:10px;background:#eee;border-radius:6px;overflow:hidden"><div style="width:${barPerc}%;height:100%;background:${i%2===0?'green':'#ff6b6b'}"></div></div></td></tr>`;
-    }
-    digitTableBody.innerHTML = rows;
-  }
-
-  function updateHeatmap(){
-    const total = digits.length || 1;
-    const bars = heatmapEl.querySelectorAll('[data-digit]');
-    bars.forEach(b=>{
-      const idx = Number(b.dataset.digit);
-      const inner = b.children[0];
-      const cnt = counts[idx] || 0;
-      const pct = Math.round((cnt/total)*100);
-      const height = Math.max(6, pct);
-      inner.style.height = height + '%';
-      // color scale
-      let color = '#777';
-      if (pct >= 25) color = '#0f9d58';
-      else if (pct >= 15) color = '#f4b400';
-      else color = '#777';
-      inner.style.background = color;
-      inner.textContent = cnt>0?cnt:'';
-    });
-  }
-
-  function updateEvenOdd(){
-    const total = digits.length || 1;
-    const evens = digits.filter(d=>d%2===0).length;
-    const odds = total - evens;
-    const evenPct = ((evens/total)*100).toFixed(2);
-    const oddPct = ((odds/total)*100).toFixed(2);
-    evenPctEl.textContent = evenPct+'%';
-    oddPctEl.textContent = oddPct+'%';
-    evenBar.style.width = Math.max(0.5, evenPct) + '%';
-    oddBar.style.width = Math.max(0.5, oddPct) + '%';
-  }
-
-  function updateTrending(){
-    let top=-1, topc=0;
-    for(let i=0;i<10;i++){ if((counts[i]||0) > topc){ topc=counts[i]; top=i; } }
-    topDigitEl.textContent = top>=0?`${top} (${topc})`:'—';
-    streakCountEl.textContent = streak;
-    // recent list
-    const recent = digits.slice(-12).reverse();
-    recentList.innerHTML = recent.map(d=>`<span class="tok" style="background:${d%2===0?'rgba(16,185,129,0.06)':'rgba(255,77,77,0.06)'};color:${d%2===0?'#10b981':'#ff6b6b'};margin-right:6px;padding:6px;border-radius:6px">${d}</span>`).join('');
-  }
-
-  // prediction
-  function frequencyPrediction(n=3){
-    const total = digits.length || 1; let arr=[];
-    for(let i=0;i<10;i++){ arr.push({digit:i,count:counts[i]||0,pct:((counts[i]||0)/total)*100}); }
-    arr.sort((a,b)=>b.pct - a.pct); return arr.slice(0,n);
-  }
-  function markovPrediction(lastDigit, n=3){
-    if(typeof lastDigit !== 'number
+</body>
+</html>
