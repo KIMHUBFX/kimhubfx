@@ -1,0 +1,378 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>Analysis Tool • KIMHUBFX</title>
+<link rel="stylesheet" href="style.css"> <!-- keeps your site CSS -->
+<style>
+  /* Light theme wrapper — minimal and non-intrusive */
+  :root {
+    --bg: #f7f7f8;
+    --card: #ffffff;
+    --accent: #ff4d4d;
+    --muted: #6b7280;
+    --green: #16a34a;
+    --red: #ef4444;
+    --gold: #f59e0b;
+  }
+  body { background: var(--bg); font-family: Arial, Helvetica, sans-serif; margin:0; color:#111; }
+  .container { max-width:980px; margin:18px auto; padding:12px; }
+  .card { background:var(--card); border-radius:12px; box-shadow: 0 6px 18px rgba(16,24,40,0.06); padding:14px; margin-bottom:14px; }
+  h2 { margin: 6px 0 12px; font-size:18px; color: #111; }
+  .controls { display:flex; gap:10px; flex-wrap:wrap; align-items:center; }
+  select, input[type=number] { padding:8px 10px; border-radius:8px; border:1px solid #ddd; font-size:14px; background:#fff; }
+  .btn { background:var(--accent); color:white; border:none; padding:8px 12px; border-radius:8px; font-weight:700; cursor:pointer; }
+  .btn.secondary { background:#e6e7eb; color:#111; }
+  .status { font-size:13px; color:var(--muted); margin-left:8px;}
+  .top-row { display:flex; gap:16px; align-items:center; justify-content:space-between; flex-wrap:wrap; }
+
+  /* price & summary */
+  .price { font-size:20px; font-weight:800; color:#0f172a; }
+  .summary { display:flex; gap:16px; align-items:center; flex-wrap:wrap; }
+
+  /* digit grid */
+  .digit-grid { display:grid; grid-template-columns: repeat(5,1fr); gap:12px; margin-top:12px; }
+  .digit-card { background:#fbfdff; border-radius:10px; padding:10px; text-align:center; border:1px solid #e8eef6; }
+  .digit-circle {
+    width:62px; height:62px; border-radius:50%; margin: 0 auto; display:flex; align-items:center; justify-content:center;
+    font-weight:900; font-size:20px; color:#fff; background:#09121a;
+    box-shadow: 0 6px 16px rgba(2,6,23,0.06);
+  }
+  .pct { margin-top:8px; font-weight:800; color:var(--gold); }
+  .digit-circle.high { box-shadow: 0 0 12px rgba(34,197,94,0.25); border: 3px solid rgba(34,197,94,0.12); }
+  .digit-circle.low  { box-shadow: 0 0 12px rgba(239,68,68,0.2); border: 3px solid rgba(239,68,68,0.12); }
+
+  /* small stats */
+  .mini { display:flex; gap:16px; margin-top:12px; align-items:center; }
+  .mini .stat { background:#fff; padding:8px 12px; border-radius:8px; box-shadow: 0 4px 12px rgba(2,6,23,0.04); }
+
+  /* bar charts even/odd & over/under */
+  .bars { margin-top:12px; display:flex; gap:12px; flex-direction:column; }
+  .bar-row { display:flex; align-items:center; gap:10px; }
+  .bar-label { width:80px; font-weight:700; color:#111; }
+  .bar-track { flex:1; height:14px; background:#e6eef6; border-radius:8px; overflow:hidden; }
+  .bar-fill { height:100%; background:var(--accent); border-radius:8px; transition:width .2s ease; }
+
+  /* stream of last digits */
+  .stream { margin-top:12px; display:flex; gap:8px; flex-wrap:wrap; }
+  .stream .dot { background:#0b1220; color:#fff; padding:6px 9px; border-radius:6px; font-weight:800; }
+
+  /* responsive */
+  @media (max-width:520px){
+    .digit-grid { grid-template-columns: repeat(5, 1fr); }
+    .bar-label { width:72px; font-size:13px; }
+  }
+</style>
+</head>
+<body>
+
+<div class="container">
+  <!-- Controls -->
+  <div class="card">
+    <div class="top-row">
+      <div>
+        <h2>Analysis Tool — Live Digits</h2>
+        <div class="status" id="infoSmall">Uses public ticks (no login) — app_id 1089</div>
+      </div>
+
+      <div class="summary">
+        <div class="controls">
+          <label>
+            Market
+            <select id="marketSelect" aria-label="market select">
+              <option value="R_10">Volatility 10 (R_10)</option>
+              <option value="R_25">Volatility 25 (R_25)</option>
+              <option value="R_50">Volatility 50 (R_50)</option>
+              <option value="R_75">Volatility 75 (R_75)</option>
+              <option value="R_100" selected>Volatility 100 (R_100)</option>
+            </select>
+          </label>
+
+          <label>
+            History size
+            <input id="historySize" type="number" value="500" min="50" max="5000" style="width:100px" />
+          </label>
+
+          <button id="connectBtn" class="btn">Connect</button>
+          <button id="disconnectBtn" class="btn secondary">Disconnect</button>
+          <div class="status" id="connStatus">Status: Disconnected</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Price & last digit -->
+  <div class="card">
+    <div style="display:flex; align-items:center; justify-content:space-between; gap:12px; flex-wrap:wrap;">
+      <div>
+        <div class="price">Latest Price: <span id="price">—</span></div>
+        <div class="status" id="lastTick">Last digit: —</div>
+      </div>
+
+      <div class="mini">
+        <div class="stat">Total ticks: <strong id="totalTicks">0</strong></div>
+        <div class="stat">Even: <strong id="evenPct">—</strong></div>
+        <div class="stat">Odd: <strong id="oddPct">—</strong></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Digits grid -->
+  <div class="card">
+    <h2>Last digits distribution (0–9)</h2>
+    <div id="digitGrid" class="digit-grid"></div>
+
+    <div class="bars">
+      <div class="bar-row">
+        <div class="bar-label">Even</div>
+        <div class="bar-track"><div id="evenBar" class="bar-fill" style="width:0%"></div></div>
+        <div id="evenLabel" style="width:60px;text-align:right;font-weight:700">0%</div>
+      </div>
+
+      <div class="bar-row">
+        <div class="bar-label">Odd</div>
+        <div class="bar-track"><div id="oddBar" class="bar-fill" style="width:0%"></div></div>
+        <div id="oddLabel" style="width:60px;text-align:right;font-weight:700">0%</div>
+      </div>
+
+      <div class="bar-row">
+        <div class="bar-label">Over</div>
+        <div class="bar-track"><div id="overBar" class="bar-fill" style="width:0%; background:#10b981"></div></div>
+        <div id="overLabel" style="width:60px;text-align:right;font-weight:700">0%</div>
+      </div>
+
+      <div class="bar-row">
+        <div class="bar-label">Under</div>
+        <div class="bar-track"><div id="underBar" class="bar-fill" style="width:0%; background:#fb7185"></div></div>
+        <div id="underLabel" style="width:60px;text-align:right;font-weight:700">0%</div>
+      </div>
+    </div>
+
+    <div class="stream" id="stream"></div>
+  </div>
+
+  <!-- Notes -->
+  <div class="card" style="font-size:13px; color:var(--muted)">
+    <strong>Notes:</strong> This tool connects to Deriv public tick stream using <code>app_id=1089</code>. No login or user token is required for the analysis digits. If ticks don't appear, ensure you are loading the file over <strong>HTTPS</strong> and the file path is correct on GitHub Pages. Use the History size to control the sliding window for percentage calculations.
+  </div>
+</div>
+
+<script>
+/*
+  Analysis Tool (light theme)
+  - Uses Deriv public websocket (app_id=1089)
+  - Subscribes to ticks for a chosen market (R_10..R_100)
+  - Keeps a sliding history (N) and computes:
+      * counts for digits 0-9
+      * percentage for each digit
+      * even / odd percentages
+      * over (>4) / under (<=4) percentages
+  - Highlights highest & lowest digits
+*/
+
+// UI elements
+const marketSelect = document.getElementById('marketSelect');
+const historySizeInput = document.getElementById('historySize');
+const connectBtn = document.getElementById('connectBtn');
+const disconnectBtn = document.getElementById('disconnectBtn');
+const connStatus = document.getElementById('connStatus');
+const priceEl = document.getElementById('price');
+const lastTickEl = document.getElementById('lastTick');
+const totalTicksEl = document.getElementById('totalTicks');
+const digitGrid = document.getElementById('digitGrid');
+const stream = document.getElementById('stream');
+
+const evenBar = document.getElementById('evenBar');
+const oddBar = document.getElementById('oddBar');
+const evenLabel = document.getElementById('evenLabel');
+const oddLabel = document.getElementById('oddLabel');
+const overBar = document.getElementById('overBar');
+const underBar = document.getElementById('underBar');
+const overLabel = document.getElementById('overLabel');
+const underLabel = document.getElementById('underLabel');
+const evenPctStat = document.getElementById('evenPct');
+const oddPctStat = document.getElementById('oddPct');
+
+let ws = null;
+let history = [];
+let counts = Array(10).fill(0);
+let maxHistory = parseInt(historySizeInput.value,10) || 500;
+let totalTicks = 0;
+
+// Prepare digit grid HTML
+function createDigitGrid(){
+  digitGrid.innerHTML = '';
+  for(let i=0;i<10;i++){
+    const card = document.createElement('div');
+    card.className = 'digit-card';
+    card.innerHTML = `
+      <div class="digit-circle" id="d${i}">${i}</div>
+      <div class="pct" id="p${i}">0.00%</div>
+    `;
+    digitGrid.appendChild(card);
+  }
+}
+createDigitGrid();
+
+// Helpers
+function setStatus(txt){ connStatus.textContent = 'Status: ' + txt; }
+
+function resetData(){
+  history = [];
+  counts = Array(10).fill(0);
+  totalTicks = 0;
+  updateUI();
+  stream.innerHTML = '';
+}
+
+function updateUI(){
+  // totals
+  const total = Math.max(1, history.length);
+  document.getElementById('totalTicks').textContent = history.length;
+  // compute even/odd and over/under
+  let even = 0, odd = 0, over=0, under=0;
+  for(let i=0;i<10;i++){
+    const pct = (counts[i]/total)*100;
+    document.getElementById('p'+i).textContent = pct.toFixed(2) + '%';
+    if(i%2===0) even += counts[i]; else odd += counts[i];
+    if(i>4) over += counts[i]; else under += counts[i];
+  }
+  const evenPct = (even/total)*100; const oddPct=(odd/total)*100;
+  const overPct=(over/total)*100; const underPct=(under/total)*100;
+  // bars
+  evenBar.style.width = evenPct.toFixed(2) + '%';
+  oddBar.style.width = oddPct.toFixed(2) + '%';
+  overBar.style.width = overPct.toFixed(2)+ '%';
+  underBar.style.width = underPct.toFixed(2)+ '%';
+  evenLabel.textContent = evenPct.toFixed(2) + '%';
+  oddLabel.textContent = oddPct.toFixed(2) + '%';
+  overLabel.textContent = overPct.toFixed(2) + '%';
+  underLabel.textContent = underPct.toFixed(2) + '%';
+  evenPctStat && (evenPctStat.textContent = evenPct.toFixed(2) + '%');
+  oddPctStat && (oddPctStat.textContent = oddPct.toFixed(2) + '%');
+
+  // highlight highest/lowest
+  const max = Math.max(...counts);
+  const min = Math.min(...counts);
+  for(let i=0;i<10;i++){
+    const el = document.getElementById('d'+i);
+    if(!el) continue;
+    el.classList.remove('high','low');
+    if(counts[i] === max && total>0) el.classList.add('high');
+    if(counts[i] === min && total>0) el.classList.add('low');
+  }
+}
+
+// append to stream
+function pushStream(d){
+  const el = document.createElement('div');
+  el.className = 'dot';
+  el.textContent = d;
+  stream.insertBefore(el, stream.firstChild);
+  // keep last 18
+  while(stream.children.length > 18) stream.removeChild(stream.lastChild);
+}
+
+// WebSocket management
+function connectWS(){
+  if(ws && ws.readyState === WebSocket.OPEN) return;
+  const market = marketSelect.value || 'R_100';
+  const url = "wss://ws.derivws.com/websockets/v3?app_id=1089";
+  setStatus('Connecting...');
+  ws = new WebSocket(url);
+
+  ws.onopen = () => {
+    setStatus('Connected');
+    // subscribe ticks
+    const msg = { ticks: market, subscribe: 1 };
+    ws.send(JSON.stringify(msg));
+  };
+
+  ws.onmessage = (msg) => {
+    try{
+      const data = JSON.parse(msg.data);
+      if(data.error){
+        console.warn('Deriv error', data.error);
+        setStatus('Error: ' + (data.error.message||data.error));
+        return;
+      }
+      if(!data.tick) return;
+      const tick = data.tick;
+      const price = Number(tick.quote);
+      priceEl.textContent = price;
+      // derive last digit (use integer part)
+      const last = Math.floor(price) % 10;
+      lastTickEl.textContent = 'Last digit: ' + last;
+      // update history
+      maxHistory = parseInt(historySizeInput.value,10) || 500;
+      history.push(last);
+      counts[last] = (counts[last] || 0) + 1;
+      // trim
+      while(history.length > maxHistory){
+        const rem = history.shift();
+        counts[rem] = Math.max(0, counts[rem] - 1);
+      }
+      // update UI
+      updateUI();
+      pushStream(last);
+    }catch(e){
+      console.error(e);
+    }
+  };
+
+  ws.onerror = (err) => {
+    console.error('WS error', err);
+    setStatus('WebSocket error');
+  };
+
+  ws.onclose = () => {
+    setStatus('Disconnected');
+    ws = null;
+  };
+}
+
+function disconnectWS(){
+  if(!ws) { setStatus('Disconnected'); return; }
+  try { ws.close(); } catch(e){}
+  ws = null;
+  setStatus('Disconnected');
+}
+
+// Controls
+connectBtn.addEventListener('click', ()=> {
+  resetData();
+  connectWS();
+});
+disconnectBtn.addEventListener('click', ()=> {
+  disconnectWS();
+});
+
+// auto-reconnect when market changes
+marketSelect.addEventListener('change', ()=>{
+  // if already connected, restart subscription: close+reconnect
+  if(ws && ws.readyState === WebSocket.OPEN){
+    disconnectWS();
+    setTimeout(()=> connectWS(), 250);
+  } else {
+    resetData();
+  }
+});
+
+// update history size live
+historySizeInput.addEventListener('change', ()=> {
+  maxHistory = parseInt(historySizeInput.value,10) || 500;
+  // trim if needed
+  while(history.length > maxHistory){
+    const rem = history.shift();
+    counts[rem] = Math.max(0, counts[rem] - 1);
+  }
+  updateUI();
+});
+
+// initial small status
+setStatus('Disconnected');
+</script>
+
+</body>
+  </html>
