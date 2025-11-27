@@ -1,32 +1,418 @@
-<div class="page-section">
-    <h2>Market Analysis</h2>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>Analysis • KIMHUBFX</title>
+<link rel="stylesheet" href="style.css">
+<style>
+/* LIGHT DollarPrinter-style combined UI — compact, responsive */
+:root{
+  --bg:#f4f6f8; --card:#fff; --muted:#6b7280; --accent:#0f172a;
+  --red:#ef4444; --green:#16a34a; --gold:#f59e0b; --glass:rgba(2,6,23,0.03);
+}
+*{box-sizing:border-box}
+body{margin:0;font-family:Inter,Arial,Helvetica,sans-serif;background:var(--bg);color:var(--accent)}
+.container{max-width:1200px;margin:18px auto;padding:12px}
+.card{background:var(--card);border-radius:12px;padding:14px;margin-bottom:14px;box-shadow:0 8px 24px rgba(2,6,23,0.04);border:1px solid rgba(2,6,23,0.03)}
+.top-row{display:flex;gap:12px;align-items:center;justify-content:space-between;flex-wrap:wrap}
+.controls{display:flex;gap:10px;align-items:center;flex-wrap:wrap}
+select,input[type=number]{padding:8px;border-radius:8px;border:1px solid #e6edf3;background:#fff;color:var(--accent);font-size:14px}
+.btn{background:var(--red);color:#fff;padding:9px 12px;border-radius:8px;border:0;font-weight:800;cursor:pointer}
+.btn.secondary{background:#eef2f6;color:var(--accent)}
+.small{font-size:13px;color:var(--muted)}
 
-    <div class="card">
-        <p class="muted">
-            This section will contain market analysis, patterns, signals, and
-            real-time observations.  
-            You can freely add or remove anything here.
-        </p>
+/* Layout grid */
+.grid{display:grid;grid-template-columns:1fr 420px;gap:12px}
+@media(max-width:1100px){ .grid{grid-template-columns:1fr} }
 
-        <!-- Example analysis items -->
-        <div class="analysis-item">
-            <h4>🔥 Hot Market Conditions</h4>
-            <p>Shows markets with high movement and strong trends.</p>
-        </div>
+/* Price & digits */
+.price-box{display:flex;gap:18px;align-items:center;flex-wrap:wrap}
+.price-big{font-size:26px;font-weight:900;color:var(--accent)}
+.last-digit{font-size:36px;font-weight:900;color:var(--red)}
+.summary-stats{display:flex;gap:12px;align-items:center;flex-wrap:wrap}
 
-        <div class="analysis-item">
-            <h4>📈 Trend Finder</h4>
-            <p>Detects current trend direction across indices.</p>
-        </div>
+/* Digit grid */
+.digit-grid{display:grid;grid-template-columns:repeat(5,1fr);gap:12px;margin-top:12px}
+.digit-card{background:#fbfdff;border-radius:10px;padding:12px;text-align:center;border:1px solid rgba(2,6,23,0.02)}
+.digit-circle{width:72px;height:72px;border-radius:50%;margin:0 auto;display:flex;align-items:center;justify-content:center;font-weight:900;font-size:22px;color:#fff;background:#09121a;box-shadow:0 8px 20px rgba(2,6,23,0.06)}
+.digit-circle.high{box-shadow:0 10px 40px rgba(16,185,129,0.12);border:3px solid rgba(16,185,129,0.12)}
+.digit-circle.low{box-shadow:0 10px 40px rgba(239,68,68,0.12);border:3px solid rgba(239,68,68,0.10)}
+.digit-pct{margin-top:8px;font-weight:800;color:var(--gold)}
 
-        <div class="analysis-item">
-            <h4>📊 Volume Snapshot</h4>
-            <p>Displays approximate volatility and momentum levels.</p>
-        </div>
+/* stream */
+.stream{display:flex;gap:8px;flex-wrap:wrap;margin-top:12px}
+.dot{background:#0b1220;color:#fff;padding:6px 8px;border-radius:6px;font-weight:800}
 
-        <div class="analysis-item">
-            <h4>⚡ Quick Signals</h4>
-            <p>Short-term signals based on your custom formulas.</p>
-        </div>
+/* heatmap */
+.heatmap{display:flex;gap:8px;align-items:flex-end;height:120px;padding:8px;border-radius:8px;background:linear-gradient(180deg,#fff,#fbfdff);border:1px solid rgba(2,6,23,0.02)}
+.heatbar{flex:1;display:flex;align-items:flex-end;justify-content:center;padding-bottom:6px;border-radius:6px;background:rgba(2,6,23,0.02)}
+.heatbar > div{width:100%;border-radius:6px 6px 0 0;text-align:center;color:#fff;font-weight:800;font-size:12px;padding-top:6px}
+
+/* bars */
+.bars{display:flex;flex-direction:column;gap:10px;margin-top:12px}
+.bar-row{display:flex;align-items:center;gap:10px}
+.bar-label{width:100px;font-weight:800}
+.bar-track{flex:1;background:#eef3f7;border-radius:12px;overflow:hidden;height:14px}
+.bar-fill{height:100%;border-radius:12px;transition:width .18s ease}
+
+/* tick table */
+.tick-table{width:100%;border-collapse:collapse;margin-top:8px}
+.tick-table th, .tick-table td{padding:8px;border-bottom:1px solid #f3f6f8;font-size:13px}
+
+/* candle / sparkline area */
+.sparkline{width:100%;height:120px;background:#fff;border-radius:8px;border:1px solid #f2f6f8}
+
+/* condition builder */
+.cond-row{display:flex;gap:8px;align-items:center;flex-wrap:wrap}
+.cond-item{padding:8px;border-radius:8px;border:1px solid #f2f6f8;margin-top:8px}
+
+/* minor */
+.small-muted{font-size:13px;color:var(--muted)}
+</style>
+</head>
+<body>
+
+<!-- keep header/sidebar for integration -->
+<div id="sidebar" class="sidebar" style="display:none"></div>
+<header style="padding:10px 14px;background:transparent">
+  <div style="max-width:1200px;margin:0 auto;display:flex;align-items:center;gap:12px">
+    <button onclick="appUI.openMenu()">☰</button>
+    <div style="font-weight:900">KIMHUBFX</div>
+    <div style="margin-left:auto" id="authContainer"></div>
+  </div>
+</header>
+
+<main class="container">
+  <!-- controls -->
+  <div class="card">
+    <div class="top-row">
+      <div style="display:flex;gap:12px;align-items:center;flex-wrap:wrap">
+        <label class="small" style="font-weight:800">Market</label>
+        <select id="marketSelect" style="min-width:240px">
+          <optgroup label="Volatility Indices">
+            <option value="R_10">R_10 (Vol 10)</option>
+            <option value="R_25">R_25 (Vol 25)</option>
+            <option value="R_50">R_50 (Vol 50)</option>
+            <option value="R_75">R_75 (Vol 75)</option>
+            <option value="R_100" selected>R_100 (Vol 100)</option>
+            <option value="R_150">R_150</option>
+            <option value="R_200">R_200</option>
+            <option value="R_250">R_250</option>
+            <option value="R_300">R_300</option>
+          </optgroup>
+          <optgroup label="1s Volatility">
+            <option value="1HZ10V">1HZ10V</option>
+            <option value="1HZ25V">1HZ25V</option>
+            <option value="1HZ50V">1HZ50V</option>
+            <option value="1HZ75V">1HZ75V</option>
+            <option value="1HZ100V">1HZ100V</option>
+          </optgroup>
+          <optgroup label="2s Volatility">
+            <option value="2HZ10V">2HZ10V</option>
+            <option value="2HZ25V">2HZ25V</option>
+            <option value="2HZ50V">2HZ50V</option>
+            <option value="2HZ75V">2HZ75V</option>
+            <option value="2HZ100V">2HZ100V</option>
+          </optgroup>
+        </select>
+
+        <label class="small" style="font-weight:800">History</label>
+        <input id="historySize" type="number" value="500" min="50" max="5000" style="width:110px">
+
+        <button id="connectBtn" class="btn">Connect</button>
+        <button id="disconnectBtn" class="btn secondary">Disconnect</button>
+        <button id="pauseBtn" class="btn secondary">Pause</button>
+      </div>
+
+      <div style="text-align:right">
+        <div class="small">Connection</div>
+        <div id="connStatus" style="font-weight:900;color:var(--muted)">Disconnected</div>
+      </div>
     </div>
-</div>
+  </div>
+
+  <!-- main grid -->
+  <div class="grid">
+    <!-- left: main analyzers -->
+    <div>
+      <!-- price + last digit -->
+      <div class="card">
+        <div class="price-box" style="justify-content:space-between">
+          <div>
+            <div class="small">Latest Price</div>
+            <div id="latestPrice" class="price-big">—</div>
+            <div id="latestTime" class="small-muted">—</div>
+          </div>
+
+          <div style="text-align:center">
+            <div class="small">Last Digit</div>
+            <div id="lastDigit" class="last-digit">—</div>
+          </div>
+
+          <div style="text-align:right">
+            <div class="small">Total ticks</div>
+            <div id="totalTicks" style="font-weight:900">0</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- digit grid -->
+      <div class="card">
+        <h3 style="margin:0 0 8px 0">Digits distribution (0–9)</h3>
+        <div id="digitGrid" class="digit-grid" role="region" aria-live="polite"></div>
+        <div class="stream" id="digitStream" aria-live="polite"></div>
+      </div>
+
+      <!-- tick table -->
+      <div class="card">
+        <h3 style="margin:0 0 8px 0">Tick Table (latest)</h3>
+        <div style="max-height:220px;overflow:auto">
+          <table class="tick-table" id="tickTable">
+            <thead><tr><th>Time</th><th>Price</th><th>Digit</th><th>Δ</th></tr></thead>
+            <tbody id="tickTableBody"></tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- sparkline / candles -->
+      <div class="card">
+        <h3 style="margin:0 0 8px 0">Sparkline (last ticks)</h3>
+        <canvas id="sparkCanvas" class="sparkline"></canvas>
+        <div style="display:flex;gap:12px;margin-top:8px">
+          <div class="small-muted">OHLC (last candle): <span id="lastOHLC">—</span></div>
+          <div class="small-muted">Candle time left: <span id="candleTimer">—</span></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- right: heatmap, preds, signals -->
+    <div>
+      <div class="card">
+        <div style="font-weight:800">Heatmap</div>
+        <div id="heatmap" class="heatmap" style="margin-top:8px"></div>
+
+        <div class="bars" style="margin-top:12px">
+          <div class="bar-row"><div class="bar-label">Even</div><div class="bar-track"><div id="evenBar" class="bar-fill" style="width:0%;background:var(--green)"></div></div><div id="evenPct" style="width:60px;text-align:right;font-weight:800">0%</div></div>
+          <div class="bar-row"><div class="bar-label">Odd</div><div class="bar-track"><div id="oddBar" class="bar-fill" style="width:0%;background:var(--red)"></div></div><div id="oddPct" style="width:60px;text-align:right;font-weight:800">0%</div></div>
+          <div class="bar-row"><div class="bar-label">Over (5-9)</div><div class="bar-track"><div id="overBar" class="bar-fill" style="width:0%;background:#10b981"></div></div><div id="overPct" style="width:60px;text-align:right;font-weight:800">0%</div></div>
+          <div class="bar-row"><div class="bar-label">Under (0-4)</div><div class="bar-track"><div id="underBar" class="bar-fill" style="width:0%;background:#fb7185"></div></div><div id="underPct" style="width:60px;text-align:right;font-weight:800">0%</div></div>
+        </div>
+      </div>
+
+      <div class="card">
+        <div style="font-weight:800">Prediction Engine</div>
+        <div id="freqPred" style="margin-top:8px"></div>
+        <div id="markovPred" style="margin-top:8px"></div>
+        <button id="refreshPred" class="btn" style="margin-top:8px">Refresh</button>
+
+        <hr style="margin:12px 0;border:none;border-top:1px solid #f2f6f8">
+
+        <div style="font-weight:800">Signals</div>
+        <div id="signalBox" style="margin-top:8px"></div>
+      </div>
+
+      <div class="card">
+        <div style="font-weight:800">Condition Builder</div>
+        <div class="cond-row" style="margin-top:8px">
+          <select id="condMetric"><option value="pct_digit">Digit %</option><option value="count_digit">Digit count</option><option value="even_pct">Even %</option><option value="odd_pct">Odd %</option><option value="over_pct">Over %</option></select>
+          <input id="condDigit" type="number" min="0" max="9" placeholder="digit" style="width:70px"/>
+          <select id="condOp"><option value=">">&gt;</option><option value="<">&lt;</option><option value="=">=</option></select>
+          <input id="condValue" type="number" placeholder="value" style="width:90px"/>
+          <button id="addConditionBtn" class="btn">Add</button>
+        </div>
+        <div id="conditionsList"></div>
+        <button id="evalBtn" class="btn" style="margin-top:8px">Evaluate Signals</button>
+        <div id="signalOutput" style="margin-top:8px"></div>
+      </div>
+    </div>
+  </div>
+</main>
+
+<!-- ---------- SCRIPTS: engines, UI, websocket, chart ---------- -->
+<script>
+/* ---------- Globals ---------- */
+let digits = [];
+let maxHistory = 500;
+let paused = false;
+let lastPrice = null;
+let lastEpoch = null;
+let tickRecords = []; // for tick table
+const MAX_TICK_ROWS = 200;
+
+/* DOM refs */
+const marketSelect = document.getElementById('marketSelect');
+const historyInput = document.getElementById('historySize');
+const connStatus = document.getElementById('connStatus');
+const latestPrice = document.getElementById('latestPrice');
+const latestTime = document.getElementById('latestTime');
+const lastDigitEl = document.getElementById('lastDigit');
+const totalTicksEl = document.getElementById('totalTicks');
+const digitGrid = document.getElementById('digitGrid');
+const digitStream = document.getElementById('digitStream');
+const heatmapEl = document.getElementById('heatmap');
+const evenBar = document.getElementById('evenBar');
+const oddBar = document.getElementById('oddBar');
+const evenPct = document.getElementById('evenPct');
+const oddPct = document.getElementById('oddPct');
+const overBar = document.getElementById('overBar');
+const underBar = document.getElementById('underBar');
+const overPct = document.getElementById('overPct');
+const underPct = document.getElementById('underPct');
+const freqPred = document.getElementById('freqPred');
+const markovPred = document.getElementById('markovPred');
+const tickTableBody = document.getElementById('tickTableBody');
+const lastOHLC = document.getElementById('lastOHLC');
+const candleTimer = document.getElementById('candleTimer');
+const sparkCanvas = document.getElementById('sparkCanvas');
+const refreshPred = document.getElementById('refreshPred');
+const addConditionBtn = document.getElementById('addConditionBtn');
+const conditionsList = document.getElementById('conditionsList');
+const evalBtn = document.getElementById('evalBtn');
+const signalOutput = document.getElementById('signalOutput');
+const signalBox = document.getElementById('signalBox');
+
+/* Chart context */
+let sparkCtx = sparkCanvas.getContext('2d');
+function resizeCanvas(){ sparkCanvas.width = sparkCanvas.clientWidth; sparkCanvas.height = sparkCanvas.clientHeight; }
+window.addEventListener('resize', ()=>{ resizeCanvas(); drawSparkline(); });
+resizeCanvas();
+
+/* helpers */
+function getCounts(){
+  const map = {}; for(let i=0;i<10;i++) map[i]=0;
+  digits.forEach(d=>map[d]++);
+  return map;
+}
+function clamp(n,min,max){ return Math.max(min, Math.min(max, n)); }
+
+/* ---------- UI Updaters ---------- */
+function updateAll(){
+  updatePriceUI();
+  updateDigitGrid();
+  updateStream();
+  updateHeatmap();
+  updateBars();
+  updateDistributionTable();
+  updateTrending();
+  updatePredictions();
+  updateTickTableUI();
+  drawSparkline();
+}
+
+function updatePriceUI(){
+  latestPrice.textContent = lastPrice ?? '—';
+  latestTime.textContent = lastEpoch ? new Date(lastEpoch*1000).toLocaleTimeString() : '—';
+  lastDigitEl.textContent = digits.length ? digits[digits.length-1] : '—';
+  totalTicksEl.textContent = digits.length;
+}
+
+function updateDigitGrid(){
+  const counts = getCounts();
+  const total = Math.max(1, digits.length);
+  digitGrid.innerHTML = '';
+  const maxCount = Math.max(...Object.values(counts));
+  const minCount = Math.min(...Object.values(counts));
+  for(let d=0; d<=9; d++){
+    const pct = (counts[d]/total*100) || 0;
+    const card = document.createElement('div'); card.className='digit-card';
+    const circle = document.createElement('div'); circle.className='digit-circle'; circle.textContent = d;
+    if(counts[d] === maxCount && maxCount>0) circle.classList.add('high');
+    if(counts[d] === minCount && total>0) circle.classList.add('low');
+    const pctEl = document.createElement('div'); pctEl.className='digit-pct'; pctEl.textContent = pct.toFixed(2)+'%';
+    card.appendChild(circle); card.appendChild(pctEl); digitGrid.appendChild(card);
+  }
+}
+
+function updateStream(){
+  digitStream.innerHTML = '';
+  const recent = digits.slice(-18).reverse();
+  recent.forEach(d=>{
+    const el = document.createElement('div'); el.className='dot'; el.textContent = d;
+    el.style.background = (d%2===0)?'rgba(16,185,129,0.12)':'rgba(255,77,77,0.08)';
+    el.style.color = (d%2===0)?'#0f5132':'#7f1d1d';
+    digitStream.appendChild(el);
+  });
+}
+
+function updateHeatmap(){
+  const counts = getCounts();
+  const max = Math.max(...Object.values(counts)) || 1;
+  heatmapEl.innerHTML = '';
+  for(let d=0; d<=9; d++){
+    const bar = document.createElement('div'); bar.className='heatbar';
+    const inner = document.createElement('div');
+    const height = Math.max(6, Math.round((counts[d]/max)*100));
+    inner.style.height = height + '%';
+    if(counts[d] >= max*0.9) inner.style.background = 'linear-gradient(180deg,#16a34a,#047857)';
+    else if(counts[d] >= max*0.6) inner.style.background = 'linear-gradient(180deg,#f59e0b,#b45309)';
+    else inner.style.background = 'linear-gradient(180deg,#3b82f6,#1e40af)';
+    inner.textContent = counts[d] > 0 ? counts[d] : '';
+    bar.appendChild(inner); heatmapEl.appendChild(bar);
+  }
+}
+
+function updateBars(){
+  const total = Math.max(1, digits.length);
+  let even=0,over=0;
+  for(let i=0;i<digits.length;i++){ if(digits[i]%2===0) even++; if(digits[i]>4) over++; }
+  const odd = total - even;
+  const evenP = even/total*100; const oddP = odd/total*100;
+  const overP = over/total*100; const underP = (total-over)/total*100;
+  evenBar.style.width = evenP.toFixed(2)+'%'; oddBar.style.width = oddP.toFixed(2)+'%';
+  overBar.style.width = overP.toFixed(2)+'%'; underBar.style.width = underP.toFixed(2)+'%';
+  evenPct.textContent = evenP.toFixed(2)+'%'; oddPct.textContent = oddP.toFixed(2)+'%';
+  overPct.textContent = overP.toFixed(2)+'%'; underPct.textContent = underP.toFixed(2)+'%';
+}
+
+function updateDistributionTable(){
+  const counts = getCounts(); const total = Math.max(1,digits.length);
+  distributionTable.innerHTML = '';
+  const maxCount = Math.max(...Object.values(counts)) || 1;
+  for(let d=0; d<=9; d++){
+    const pct = (counts[d]/total*100).toFixed(2); const barPerc = Math.round((counts[d]/maxCount)*100);
+    const row = document.createElement('tr');
+    row.innerHTML = `<td>${d}</td><td style="text-align:right">${counts[d]}</td><td style="text-align:right">${pct}%</td>
+      <td><div style="background:#f1f5f9;height:10px;border-radius:6px;overflow:hidden"><div style="width:${barPerc}%;height:10px;background:${d%2===0?'#16a34a':'#ef4444'}"></div></div></td>`;
+    distributionTable.appendChild(row);
+  }
+}
+
+function updateTrending(){
+  const counts = getCounts(); let top=0;
+  for(let i=1;i<=9;i++) if(counts[i]>counts[top]) top=i;
+  topDigitEl.textContent = `${top} (${counts[top]})`;
+  if(digits.length===0){ streakCountEl.textContent='0'; recentDigits.textContent=''; return; }
+  let last = digits[digits.length-1], st=1;
+  for(let i=digits.length-2;i>=0;i--){ if(digits[i]===last) st++; else break; }
+  streakCountEl.textContent = st; recentDigits.textContent = digits.slice(-40).join(' ');
+}
+
+function updatePredictions(){
+  const counts = getCounts(); const total = Math.max(1,digits.length);
+  let arr=[]; for(let i=0;i<10;i++) arr.push({digit:i,pct:counts[i]/total*100});
+  arr.sort((a,b)=>b.pct - a.pct);
+  freqPred.innerHTML = '<div style="display:flex;gap:8px;flex-wrap:wrap">' + arr.slice(0,4).map(x=>`<div style="padding:8px;border-radius:8px;background:#fbfdff;border:1px solid rgba(2,6,23,0.03);font-weight:800">${x.digit}<div style="font-size:12px;color:var(--muted)">${x.pct.toFixed(2)}%</div></div>`).join('') + '</div>';
+  const mk = buildMarkov(); const last = digits[digits.length-1]; if(last===undefined){ markovPred.innerHTML='<div class="small-muted">Need more data</div>'; return; }
+  const row = mk[last] || Array(10).fill(0); const sum = row.reduce((a,b)=>a+b,0)||1; let rowArr=row.map((c,i)=>({digit:i,pct:c/sum*100})).sort((a,b)=>b.pct-a.pct);
+  markovPred.innerHTML = rowArr.slice(0,4).map(x=>`<div style="padding:6px;border-radius:6px;background:#fbfdff;border:1px solid rgba(2,6,23,0.03);margin-bottom:6px;font-weight:800">${x.digit} <span style="float:right;font-weight:700">${x.pct.toFixed(2)}%</span></div>`).join('');
+}
+
+function buildMarkov(){
+  const matrix = Array.from({length:10},()=>Array(10).fill(0));
+  for(let i=0;i<digits.length-1;i++){ const a=digits[i], b=digits[i+1]; matrix[a][b]++; }
+  return matrix;
+}
+
+/* Tick table */
+function addTickRow(time, price, digit){
+  tickRecords.unshift({time,price,digit});
+  if(tickRecords.length > MAX_TICK_ROWS) tickRecords.pop();
+  updateTickTableUI();
+}
+function updateTickTableUI(){
+  tickTableBody.innerHTML = '';
+  let prev = null;
+  for(let i=0;i<tickRecords.length;i++){
+    const r = tickRecords[i];
+    const tr = document.createElement('t
