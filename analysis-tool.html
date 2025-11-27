@@ -1,225 +1,185 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="utf-8">
-<meta name="viewport" content="width=device-width,initial-scale=1">
-<title>Analysis Tool • KIMHUBFX</title>
-<link rel="stylesheet" href="style.css">
-<style>
-/* ---- PAGE STYLING ---- */
-.analysis-card {
-  background: #ffffff;
-  padding: 15px;
-  margin: 15px;
-  border-radius: 10px;
-  box-shadow: 0 2px 6px rgba(0,0,0,0.1);
-}
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>KIMHUBFX • Analysis Tool</title>
 
-.digit-grid {
-  display: grid;
-  grid-template-columns: repeat(5, 1fr);
-  gap: 10px;
-  padding: 10px 0;
-}
+  <!-- use your existing style.css -->
+  <link rel="stylesheet" href="style.css" />
 
-.digit-box {
-  background: #f3f3f3;
-  border-radius: 8px;
-  padding: 12px;
-  text-align: center;
-  font-weight: bold;
-  color: #ff444f;
-  font-size: 18px;
-}
-
-.tick-list {
-  max-height: 230px;
-  overflow-y: auto;
-  background: #fafafa;
-  padding: 10px;
-  border-radius: 8px;
-  font-family: monospace;
-  font-size: 14px;
-}
-</style>
+  <style>
+    /* small, page-specific UI helpers (won't conflict with your full CSS) */
+    .card { background:#fff;border-radius:12px;padding:16px;margin:12px 12px;box-shadow:0 6px 18px rgba(0,0,0,0.06); }
+    .controls { display:flex; gap:8px; flex-wrap:wrap; align-items:center; margin-bottom:12px; }
+    .select, .input, .btn { padding:10px 12px; border-radius:8px; border:1px solid #ddd; background:#fff; }
+    .btn { cursor:pointer; background:#ff4d4d; color:#fff; border:none; }
+    .status { font-weight:700; margin-left:8px; }
+    .digit-grid { display:flex; gap:8px; flex-wrap:wrap; margin-top:12px; }
+    .digit-pill { width:56px; height:56px; border-radius:28px; display:flex;align-items:center;justify-content:center;flex-direction:column;background:#111;color:#fff;font-weight:700; }
+    .pill-percent { font-size:12px; opacity:.9; margin-top:4px; }
+    .bar { height:12px; background:#eee;border-radius:8px;margin-top:8px; overflow:hidden; }
+    .bar-fill { height:100%; background:#4caf50; width:0%; transition:width .3s ease; }
+    .muted { color:#777; font-size:14px; }
+    .row { display:flex; gap:12px; align-items:center; }
+    .left { flex:1; }
+    .right { min-width:160px; text-align:right; }
+  </style>
 </head>
-
 <body>
 
-<!-- SIDEBAR -->
-<div id="sidebar" class="sidebar">
-  <div class="side-inner">
-    <h2>KIMHUBFX</h2>
-
-    <div class="section-title">Account</div>
-    <a href="#">Account Settings</a>
-    <a href="#">Cashier</a>
-    <a href="#">Dark Theme</a>
-
-    <div class="section-title">Channels</div>
-    <a href="https://wa.me/254724753475" target="_blank">WhatsApp</a>
-    <a href="https://whatsapp.com/channel/0029Vb77BD8B4hdNphlldH3g" target="_blank">WhatsApp Channel</a>
-    <a href="https://www.youtube.com/@kimhtai" target="_blank">YouTube</a>
-    <a href="https://www.tiktok.com/@kimh.tai" target="_blank">TikTok</a>
-    <a href="https://t.me/kimhubfx" target="_blank">Telegram</a>
-    <a href="https://www.instagram.com/kimh.tai" target="_blank">Instagram</a>
-    <a href="https://www.facebook.com/profile.php?id=61582999149557" target="_blank">Facebook</a>
-  </div>
-</div>
-
-<!-- TOP BAR -->
-<header class="topbar">
-  <div class="left">
-    <button class="icon-btn" onclick="appUI.openMenu()">☰</button>
-    <span class="logo">KIMHUBFX</span>
-  </div>
-  <div id="authContainer" class="auth-buttons"></div>
-</header>
-
-<!-- MENU BAR -->
-<nav class="horizontal-menu">
-  <div onclick="location.href='dashboard.html'">Dashboard</div>
-  <div onclick="location.href='bot-builder.html'">Bot Builder</div>
-  <div onclick="location.href='freebots.html'">FreeBots</div>
-  <div class="active">Analysis Tool</div>
-  <div onclick="location.href='analysis.html'">Analysis</div>
-  <div onclick="location.href='dp-tool.html'">DP Tool</div>
-  <div onclick="location.href='dtrader.html'">DTrader</div>
-  <div onclick="location.href='wallet.html'">Wallet</div>
-</nav>
-
-<!-- PAGE CONTENT -->
-<main class="container">
-
-  <h2>Analysis Tool</h2>
-
-  <!-- MARKET SELECTOR -->
-  <div class="analysis-card">
-    <h3>Select Market</h3>
-    <select id="marketSelect" style="padding:10px; width:100%; border-radius:8px;">
-
-      <!-- NORMAL VOLATILITY -->
-      <option value="R_10">Volatility 10</option>
-      <option value="R_25">Volatility 25</option>
-      <option value="R_50">Volatility 50</option>
-      <option value="R_75">Volatility 75</option>
-      <option value="R_100" selected>Volatility 100</option>
-
-      <!-- 1s VOLATILITY -->
-      <option value="1HZ10V">Volatility 10 (1s)</option>
-      <option value="1HZ25V">Volatility 25 (1s)</option>
-      <option value="1HZ50V">Volatility 50 (1s)</option>
-      <option value="1HZ75V">Volatility 75 (1s)</option>
-      <option value="1HZ100V">Volatility 100 (1s)</option>
-
-      <!-- HF VOLATILITY -->
-      <option value="R_10_HF">Volatility 10 HF</option>
-      <option value="R_25_HF">Volatility 25 HF</option>
-      <option value="R_50_HF">Volatility 50 HF</option>
-      <option value="R_75_HF">Volatility 75 HF</option>
-      <option value="R_100_HF">Volatility 100 HF</option>
-    </select>
+  <!-- top menu -->
+  <div style="padding:12px;background:#ff4d4d;color:#fff;font-weight:700;display:flex;justify-content:space-between;align-items:center;">
+    <div>KIMHUBFX</div>
+    <div>
+      <button onclick="window.location.href='index.html'" style="background:transparent;color:#fff;border:1px solid rgba(255,255,255,.2);padding:8px 10px;border-radius:8px;">Home</button>
+    </div>
   </div>
 
-  <!-- DIGIT STATS -->
-  <div class="analysis-card">
-    <h3>Digit Frequency (0–9)</h3>
+  <main style="max-width:960px;margin:16px auto;padding:0 8px;">
 
-    <div class="digit-grid" id="digitGrid"></div>
-  </div>
+    <div class="card">
+      <div class="row">
+        <div class="left">
+          <div style="font-weight:800">Analysis / Digit Distribution</div>
+          <div class="muted">Live tick stream, last-digit distribution (0–9) and even/odd</div>
+        </div>
 
-  <!-- TICK STREAM -->
-  <div class="analysis-card">
-    <h3>Live Tick Stream</h3>
-    <div id="tickStream" class="tick-list"></div>
-  </div>
+        <div class="right">
+          <span id="connStatus" class="status">Disconnected</span>
+        </div>
+      </div>
 
-</main>
+      <div style="height:12px"></div>
 
-<script src="menu.js"></script>
+      <div class="controls">
+        <select id="marketSelect" class="select">
+          <!-- options will be added by JS -->
+        </select>
 
-<script>
-/* =====================
-     DIGIT ENGINE
-======================*/
-let digitCount = Array(10).fill(0);
-let tickHistory = [];
-let ws;
+        <input id="historyInput" class="input" style="width:90px" type="number" min="10" value="500" />
+        <button id="connectBtn" class="btn">Connect</button>
+        <button id="disconnectBtn" class="btn" style="background:#6c757d">Disconnect</button>
 
-/* Draw digit grid */
-function buildDigitGrid(){
-  const box = document.getElementById("digitGrid");
-  box.innerHTML = "";
-  for(let i=0;i<10;i++){
-    const div = document.createElement("div");
-    div.className = "digit-box";
-    div.id = "digit"+i;
-    div.innerText = i + ": 0%";
-    box.appendChild(div);
-  }
-}
+        <div style="margin-left:8px;" class="muted">Total ticks: <span id="totalTicks">0</span></div>
+      </div>
 
-/* Update frequency boxes */
-function updateDigitBoxes(){
-  let total = digitCount.reduce((a,b)=>a+b,0);
-  for(let d=0; d<10; d++){
-    let pct = total === 0 ? 0 : ((digitCount[d]/total)*100).toFixed(1);
-    document.getElementById("digit"+d).innerText = `${d}: ${pct}%`;
-  }
-}
+      <div id="latestCard" style="display:flex;gap:12px;align-items:center;margin-top:12px;">
+        <div style="flex:1">
+          <div class="muted">Latest Price</div>
+          <div id="latestPrice" style="font-size:20px;font-weight:700">—</div>
+        </div>
 
-/* Update tick stream */
-function pushTick(price, digit){
-  tickHistory.unshift(`Tick: ${price} → digit: ${digit}`);
-  if(tickHistory.length > 50) tickHistory.pop();
-  document.getElementById("tickStream").innerHTML = tickHistory.join("<br>");
-}
+        <div style="width:120px">
+          <div class="muted">Last Digit</div>
+          <div id="lastDigit" style="font-size:28px;font-weight:900">—</div>
+        </div>
+      </div>
 
-/* Process tick */
-function handleTick(t){
-  let price = t.quote;
-  let digit = Number(String(price).slice(-1));
+    </div>
 
-  digitCount[digit]++;
-  updateDigitBoxes();
-  pushTick(price, digit);
-}
+    <div class="card" id="distributionCard" style="margin-top:14px;">
+      <div style="font-weight:800">Digits distribution (0–9)</div>
+      <div class="digit-grid" id="digitGrid"></div>
+    </div>
 
-/* Connect to Deriv */
-function connectWS(symbol){
-  if(ws) ws.close();
+    <div class="card" style="margin-top:12px;">
+      <div style="font-weight:800">Even / Odd</div>
+      <div style="display:flex;gap:8px;margin-top:8px;">
+        <div style="flex:1">
+          <div class="muted">Even</div>
+          <div class="bar"><div id="evenFill" class="bar-fill" style="background:#2ecc71"></div></div>
+        </div>
+        <div style="flex:1">
+          <div class="muted">Odd</div>
+          <div class="bar"><div id="oddFill" class="bar-fill" style="background:#ff6b6b"></div></div>
+        </div>
+      </div>
+    </div>
 
-  ws = new WebSocket("wss://ws.binaryws.com/websockets/v3?app_id=1089");
+  </main>
 
-  ws.onopen = () => {
-    ws.send(JSON.stringify({
-      ticks: symbol,
-      subscribe: 1
-    }));
-  };
+  <script src="menu.js"></script>
+  <script src="market-engine.js"></script>
+  <script>
+    // init UI and wire to engine (marketEngine is defined in market-engine.js)
+    const engine = window.marketEngine;
 
-  ws.onmessage = msg => {
-    let data = JSON.parse(msg.data);
-    if(data.tick) handleTick(data.tick);
-  };
-}
+    const marketSelect = document.getElementById('marketSelect');
+    const historyInput = document.getElementById('historyInput');
+    const connectBtn = document.getElementById('connectBtn');
+    const disconnectBtn = document.getElementById('disconnectBtn');
+    const connStatus = document.getElementById('connStatus');
+    const latestPrice = document.getElementById('latestPrice');
+    const lastDigit = document.getElementById('lastDigit');
+    const totalTicks = document.getElementById('totalTicks');
+    const digitGrid = document.getElementById('digitGrid');
+    const evenFill = document.getElementById('evenFill');
+    const oddFill = document.getElementById('oddFill');
 
-/* Change market */
-document.getElementById("marketSelect").addEventListener("change", ()=>{
-  digitCount = Array(10).fill(0);
-  tickHistory = [];
-  updateDigitBoxes();
-  document.getElementById("tickStream").innerHTML = "";
-  connectWS(document.getElementById("marketSelect").value);
-});
+    // populate markets
+    engine.getMarketList().forEach(m => {
+      const o = document.createElement('option'); o.value = m.id; o.textContent = m.label; marketSelect.appendChild(o);
+    });
 
-/* Initialize */
-document.addEventListener("DOMContentLoaded", ()=>{
-  appUI.renderAuthButtons('authContainer');
-  buildDigitGrid();
-  connectWS("R_100");
-});
-</script>
+    // build digit grid UI (0-9)
+    function buildDigitUI(){
+      digitGrid.innerHTML = '';
+      for(let d=0; d<=9; d++){
+        const pill = document.createElement('div');
+        pill.className = 'digit-pill';
+        pill.id = 'pill-'+d;
+        pill.innerHTML = `<div style="font-size:18px">${d}</div><div class="pill-percent" id="p-${d}">0.00%</div>`;
+        digitGrid.appendChild(pill);
+      }
+    }
+    buildDigitUI();
 
+    // UI update handler
+    function refreshUI(){
+      connStatus.textContent = engine.isConnected() ? 'Connected' : 'Disconnected';
+      const stats = engine.getStats();
+      latestPrice.textContent = stats.latestPrice ?? '—';
+      lastDigit.textContent = (stats.lastDigit === null) ? '—' : stats.lastDigit;
+      totalTicks.textContent = stats.totalTicks;
+
+      // digits
+      for(let d=0; d<=9; d++){
+        const pct = stats.digitsPct[d] ?? 0;
+        const el = document.getElementById('p-'+d);
+        if(el) el.textContent = pct.toFixed(2) + '%';
+        const pill = document.getElementById('pill-'+d);
+        if(pill){
+          // color intensity depend on pct
+          const intensity = Math.min(1, pct/12); // cap
+          pill.style.background = `rgba(${Math.round(200*(1-intensity))}, ${Math.round(200*(intensity))}, ${Math.round(80*(intensity))}, 1)`;
+        }
+      }
+
+      // even/odd
+      evenFill.style.width = stats.evenPct.toFixed(2) + '%';
+      oddFill.style.width = stats.oddPct.toFixed(2) + '%';
+    }
+
+    // connect/disconnect buttons
+    connectBtn.onclick = () => {
+      const market = marketSelect.value;
+      const historySize = parseInt(historyInput.value) || 500;
+      engine.connect({market, historySize});
+    };
+    disconnectBtn.onclick = () => engine.disconnect();
+
+    // engine events
+    engine.on('connected', refreshUI);
+    engine.on('disconnected', refreshUI);
+    engine.on('tick', refreshUI);
+    engine.on('stats', refreshUI);
+
+    // periodic UI refresh (safe)
+    setInterval(refreshUI, 800);
+
+    // auto-select first market
+    marketSelect.value = engine.getMarketList()[0].id;
+  </script>
 </body>
 </html>
